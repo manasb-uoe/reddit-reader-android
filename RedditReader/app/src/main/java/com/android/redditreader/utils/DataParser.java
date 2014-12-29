@@ -45,10 +45,9 @@ public class DataParser {
                     post.setSubreddit(data2.get("subreddit").toString());
                     post.setAuthor(data2.get("author").toString());
                     post.setScore(Integer.parseInt(data2.get("score").toString()));
+                    post.setCreated(data2.get("created_utc").toString());
                     post.setNsfw(Boolean.valueOf(data2.get("over_18").toString()));
                     post.setThumbnail(data2.get("thumbnail").toString());
-                    post.setUps(Integer.parseInt(data2.get("ups").toString()));
-                    post.setDowns(Integer.parseInt(data2.get("downs").toString()));
                     post.setUrl(data2.get("url").toString());
                     post.setTitle(data2.get("title").toString());
                     post.setNum_comments(Integer.parseInt(data2.get("num_comments").toString()));

@@ -1,5 +1,8 @@
 package com.android.redditreader.models;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Manas on 29-12-2014.
  */
@@ -11,8 +14,6 @@ public class Post {
     private int score;
     private boolean nsfw;
     private String thumbnail;
-    private int ups;
-    private int downs;
     private String created;
     private String title;
     private String url;
@@ -72,28 +73,36 @@ public class Post {
         this.thumbnail = thumbnail;
     }
 
-    public int getUps() {
-        return ups;
-    }
-
-    public void setUps(int ups) {
-        this.ups = ups;
-    }
-
-    public int getDowns() {
-        return downs;
-    }
-
-    public void setDowns(int downs) {
-        this.downs = downs;
-    }
-
     public String getCreated() {
         return created;
     }
 
     public void setCreated(String created) {
-        this.created = created;
+        Date createdAt = new Date(Double.valueOf(created).longValue() * 1000);
+        Date now = new Date();
+        long elapsed = now.getTime() - createdAt.getTime();
+
+        long diffSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsed);
+        long diffMinutes = TimeUnit.MILLISECONDS.toMinutes(elapsed);
+        long diffHours = TimeUnit.MILLISECONDS.toHours(elapsed);
+        long diffDays = TimeUnit.MILLISECONDS.toDays(elapsed);
+        long diffWeeks = diffDays / 7;
+
+        if (diffWeeks > 0) {
+            this.created = diffWeeks == 1 ? diffWeeks + " week ago" : diffWeeks + " weeks ago";
+        }
+        else if (diffDays > 0) {
+            this.created = diffDays == 1 ? diffDays + " day ago" : diffDays + " days ago";
+        }
+        else if (diffHours > 0) {
+            this.created = diffHours == 1 ? diffHours + " hour ago" : diffHours + " hours ago";
+        }
+        else if (diffMinutes > 0) {
+            this.created = diffMinutes == 1 ? diffMinutes + " minute ago" : diffMinutes + " minutes ago";
+        }
+        else {
+            this.created = diffSeconds == 1 ? diffSeconds + " second ago" : diffSeconds + " seconds ago";
+        }
     }
 
     public String getTitle() {
