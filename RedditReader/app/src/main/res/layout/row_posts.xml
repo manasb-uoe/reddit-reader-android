@@ -32,7 +32,7 @@
                     android:id="@+id/title_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     android:textColor="@color/text_primary"
                     android:text="Friends on the other side of the tank" />
 
@@ -109,7 +109,7 @@
                     android:padding="@dimen/card_icon_padding"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_arrow_top"
-                    android:background="?android:selectableItemBackground"/>
+                    android:background="?android:actionBarItemBackground"/>
 
                 <ImageButton
                     android:id="@+id/downvote_button"
@@ -119,7 +119,7 @@
                     android:layout_marginLeft="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_arrow_bottom"
-                    android:background="?android:selectableItemBackground"/>
+                    android:background="?android:actionBarItemBackground"/>
 
                 <ImageButton
                     android:id="@+id/more_options_button"
@@ -129,7 +129,7 @@
                     android:layout_marginLeft="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_overflow"
-                    android:background="?android:selectableItemBackground"/>
+                    android:background="?android:actionBarItemBackground"/>
 
             </LinearLayout>
 
