@@ -69,13 +69,13 @@ public class Helpers {
     }
 
     public static URL getCurrentSubredditURL() {
-        String base = "http://www.reddit.com/";
+        String base = Globals.BASE_API_URL;
 
         if (!Globals.CURRENT_SUBREDDIT.equals(Globals.DEFAULT_SUBREDDIT)) {
-            base = base + "r/" + Globals.CURRENT_SUBREDDIT + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
+            base = base + "/r/" + Globals.CURRENT_SUBREDDIT + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
         }
         else {
-            base = base + Globals.CURRENT_SORT.toLowerCase() + "/.json";
+            base = base + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
         }
 
         URL builtURL;

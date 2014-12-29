@@ -5,6 +5,7 @@ package com.android.redditreader.utils;
  */
 public class Globals {
 
+    public static final String BASE_API_URL = "http://www.reddit.com";
     public static final String DEFAULT_SUBREDDIT = "Front Page";
     public static final String DEFAULT_SORT = "Hot";
 //    public static final int DEFAULT_LIMIT = 15;
