@@ -6,16 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/posts_list_fragment"
+        android:name="com.android.redditreader.fragments.PostsListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_world"/>
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        app:layout="@layout/fragment_posts_list"/>
 
 
     <fragment
