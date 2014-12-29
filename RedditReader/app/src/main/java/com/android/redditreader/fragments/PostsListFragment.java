@@ -39,8 +39,7 @@ public class PostsListFragment extends Fragment {
         postsRecyclerView.setAdapter(postsAdapter);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // load posts into the recycler view using defaults
-        new GetPostsTask(Helpers.getCurrentSubredditLink(), postsAdapter, postsRecyclerView, postsProgressBar).execute();
+        refreshPosts();
 
         return view;
     }
