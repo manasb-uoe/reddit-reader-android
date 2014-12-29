@@ -7,7 +7,7 @@ public class Globals {
 
     public static final String DEFAULT_SUBREDDIT = "Front Page";
     public static final String DEFAULT_SORT = "Hot";
-    public static final int DEFAULT_LIMIT = 15;
+//    public static final int DEFAULT_LIMIT = 15;
 
     public static String CURRENT_SUBREDDIT = DEFAULT_SUBREDDIT;
     public static String CURRENT_SORT = DEFAULT_SORT;

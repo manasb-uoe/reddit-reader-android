@@ -50,7 +50,7 @@ public class PostsListFragment extends Fragment {
     }
 
     public void refreshPosts() {
-        new GetPostsTask(Helpers.getCurrentSubredditLink(), postsAdapter, postsRecyclerView, postsProgressBar).execute();
+        new GetPostsTask(Helpers.getCurrentSubredditURL(), postsAdapter, postsRecyclerView, postsProgressBar).execute();
     }
 
 }
