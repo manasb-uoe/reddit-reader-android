@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.redditreader.R;
 import com.android.redditreader.fragments.PostsListFragment;
@@ -46,21 +45,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setUpNavigationDrawer() {
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_navigation_drawer, R.string.close_navigation_drawer) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                actionBar.setTitle(getResources().getString(R.string.app_name));
-                actionBar.setSubtitle("");
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                updateActionBarText();
-            }
-        };
-
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_navigation_drawer, R.string.close_navigation_drawer);
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
