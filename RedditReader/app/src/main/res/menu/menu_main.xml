@@ -1,6 +1,101 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/action_sort_menu"
+        android:orderInCategory="101"
+        android:icon="@drawable/ic_action_content_sort"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/action_sort_hot"
+                android:title="@string/action_sort_hot"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/action_sort_top"
+                android:title="@string/action_sort_top"
+                app:showAsAction="never">
+
+                <menu>
+                    <item
+                        android:id="@+id/action_sort_top_hour"
+                        android:title="@string/action_sort_from_hour"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_top_day"
+                        android:title="@string/action_sort_from_day"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_top_week"
+                        android:title="@string/action_sort_from_week"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_top_month"
+                        android:title="@string/action_sort_from_month"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_top_year"
+                        android:title="@string/action_sort_from_year"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_top_all"
+                        android:title="@string/action_sort_from_all"
+                        app:showAsAction="never"/>
+                </menu>
+
+            </item>
+            <item
+                android:id="@+id/action_sort_new"
+                android:title="@string/action_sort_new"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/action_sort_rising"
+                android:title="@string/action_sort_rising"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/action_sort_controversial"
+                android:title="@string/action_sort_controversial"
+                app:showAsAction="never">
+
+                <menu>
+                    <item
+                        android:id="@+id/action_sort_controversial_hour"
+                        android:title="@string/action_sort_from_hour"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_controversial_day"
+                        android:title="@string/action_sort_from_day"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_controversial_week"
+                        android:title="@string/action_sort_from_week"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_controversial_month"
+                        android:title="@string/action_sort_from_month"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_controversial_year"
+                        android:title="@string/action_sort_from_year"
+                        app:showAsAction="never"/>
+                    <item
+                        android:id="@+id/action_sort_controversial_all"
+                        android:title="@string/action_sort_from_all"
+                        app:showAsAction="never"/>
+                </menu>
+
+            </item>
+        </menu>
+
+    </item>
+
 </menu>

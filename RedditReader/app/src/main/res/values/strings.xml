@@ -7,5 +7,17 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open_navigation_drawer">Open</string>
     <string name="close_navigation_drawer">Close</string>
+    <string name="action_sort_menu">Sort</string>
+    <string name="action_sort_hot">Hot</string>
+    <string name="action_sort_new">New</string>
+    <string name="action_sort_rising">Rising</string>
+    <string name="action_sort_controversial">Controversial</string>
+    <string name="action_sort_top">Top</string>
+    <string name="action_sort_from_hour">Hour</string>
+    <string name="action_sort_from_day">Day</string>
+    <string name="action_sort_from_week">Week</string>
+    <string name="action_sort_from_month">Month</string>
+    <string name="action_sort_from_year">Year</string>
+    <string name="action_sort_from_all">All</string>
 
 </resources>
