@@ -43,8 +43,7 @@ public class GetPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
 
     @Override
     protected ArrayList<Post> doInBackground(Void... params) {
-        ArrayList<Post> posts = DataParser.parsePosts(url);
-        return posts;
+        return DataParser.parsePosts(url);
     }
 
     @Override

@@ -45,12 +45,7 @@ public class DataParser {
                     post.setSubreddit(data2.get("subreddit").toString());
                     post.setAuthor(data2.get("author").toString());
                     post.setScore(Integer.parseInt(data2.get("score").toString()));
-                    if(data2.get("over_18").toString().equals("false")) {
-                        post.setNsfw(false);
-                    }
-                    else {
-                        post.setNsfw(true);
-                    }
+                    post.setNsfw(Boolean.valueOf(data2.get("over_18").toString()));
                     post.setThumbnail(data2.get("thumbnail").toString());
                     post.setUps(Integer.parseInt(data2.get("ups").toString()));
                     post.setDowns(Integer.parseInt(data2.get("downs").toString()));
