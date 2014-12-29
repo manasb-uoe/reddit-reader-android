@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="2dp"
+    android:layout_marginTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toLeftOf="@+id/thumbnail_imageview"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/title_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"
+                    android:text="Friends on the other side of the tank" />
+
+                <TextView
+                    android:id="@+id/info_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="5dp"
+                    android:text="enthusiast_94 • 6 hours ago • aww • imgur"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/thumbnail_imageview"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="4dp"
+                android:src="@android:drawable/screen_background_dark_transparent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/thumbnail_imageview"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+            <LinearLayout
+                android:id="@+id/score_and_num_comments_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/score_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:text="3897 points"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/num_comments_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:text="125 comments"
+                    android:textSize="11sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:gravity="right">
+
+                <ImageButton
+                    android:id="@+id/upvote_button"
+                    android:layout_width="@dimen/card_icon_width_height"
+                    android:layout_height="@dimen/card_icon_width_height"
+                    android:padding="@dimen/card_icon_padding"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_arrow_top"
+                    android:background="?android:selectableItemBackground"/>
+
+                <ImageButton
+                    android:id="@+id/downvote_button"
+                    android:layout_width="@dimen/card_icon_width_height"
+                    android:layout_height="@dimen/card_icon_width_height"
+                    android:padding="@dimen/card_icon_padding"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_arrow_bottom"
+                    android:background="?android:selectableItemBackground"/>
+
+                <ImageButton
+                    android:id="@+id/more_options_button"
+                    android:layout_width="@dimen/card_icon_width_height"
+                    android:layout_height="@dimen/card_icon_width_height"
+                    android:padding="@dimen/card_icon_padding"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_overflow"
+                    android:background="?android:selectableItemBackground"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

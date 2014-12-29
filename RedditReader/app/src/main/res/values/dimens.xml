@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="navigation_drawer_width">280dp</dimen>
+    <dimen name="card_icon_width_height">35dp</dimen>
+    <dimen name="card_icon_padding">8dp</dimen>
 </resources>
