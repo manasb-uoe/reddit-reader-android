@@ -37,9 +37,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
     public void onBindViewHolder(PostViewHolder holder, int position) {
         Post post = posts.get(position);
         holder.titleTextView.setText(post.getTitle());
-        holder.numCommentsTextView.setText(post.getNum_comments() + " comments");
-        holder.scoreTextView.setText(post.getScore() + " points");
-        holder.infoTextView.setText(post.getAuthor() + " • " +  post.getSubreddit() + " • " + post.getDomain());
+        holder.numCommentsTextView.setText(post.getNum_comments() == 1 ? post.getNum_comments() + " comment" : post.getNum_comments() + " comments");
+        holder.scoreTextView.setText(post.getScore() == 1 ? post.getScore() + " point" : post.getScore() + " points");
+        holder.infoTextView.setText(post.getAuthor() + " • " + post.getCreated() + " • " +  post.getSubreddit() + " • " + post.getDomain());
     }
 
     @Override
