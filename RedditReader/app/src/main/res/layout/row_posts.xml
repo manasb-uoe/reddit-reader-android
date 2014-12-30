@@ -122,6 +122,16 @@
                     android:background="?android:actionBarItemBackground"/>
 
                 <ImageButton
+                    android:id="@+id/social_share_button"
+                    android:layout_width="@dimen/card_icon_width_height"
+                    android:layout_height="@dimen/card_icon_width_height"
+                    android:padding="@dimen/card_icon_padding"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_social_share"
+                    android:background="?android:actionBarItemBackground"/>
+
+                <ImageButton
                     android:id="@+id/more_options_button"
                     android:layout_width="@dimen/card_icon_width_height"
                     android:layout_height="@dimen/card_icon_width_height"

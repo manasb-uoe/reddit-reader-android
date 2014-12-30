@@ -20,5 +20,6 @@
     <string name="action_sort_from_year">Year</string>
     <string name="action_sort_from_all">All</string>
     <string name="error_intent_cannot_be_handled">No Activity found to handle this intent</string>
+    <string name="social_share_dialog_title">Social Share</string>
 
 </resources>

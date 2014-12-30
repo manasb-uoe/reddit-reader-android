@@ -62,6 +62,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         private ImageView thumbnailImageView;
         private ImageButton upvoteButton;
         private ImageButton downvoteButton;
+        private ImageButton socialShareButton;
         private ImageButton moreOptionsButton;
 
         public PostViewHolder(View itemView) {
@@ -73,8 +74,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             thumbnailImageView = (ImageView) itemView.findViewById(R.id.thumbnail_imageview);
             upvoteButton = (ImageButton) itemView.findViewById(R.id.upvote_button);
             downvoteButton = (ImageButton) itemView.findViewById(R.id.downvote_button);
+            socialShareButton = (ImageButton) itemView.findViewById(R.id.social_share_button);
             moreOptionsButton = (ImageButton) itemView.findViewById(R.id.more_options_button);
 
+            socialShareButton.setOnClickListener(this);
             moreOptionsButton.setOnClickListener(this);
         }
 
@@ -82,35 +85,56 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         public void onClick(View v) {
             final Post selectedPost = posts.get(getPosition());
 
-            if (v.getId() == R.id.more_options_button) {
-                AlertDialog moreOptionsDialog = new AlertDialog.Builder(context)
-                .setItems(R.array.post_options_dialog_list_items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                // View subreddit
-                                Toast.makeText(context, selectedPost.getSubreddit(), Toast.LENGTH_SHORT).show();
-                                break;
-                            case 1:
-                                // View OP's profile
-                                Toast.makeText(context, selectedPost.getAuthor(), Toast.LENGTH_SHORT).show();
-                                break;
-                            case 2:
-                                // View link in browser
-                                Helpers.viewURLInBrowser(context, selectedPost.getUrl());
-                                break;
-                            case 3:
-                                // View comments in browser
-                                Helpers.viewURLInBrowser(context, Globals.BASE_API_URL + selectedPost.getPermalink());
-                                break;
-                        }
-                    }
-                })
-                .create();
-                moreOptionsDialog.show();
-
-             }
+            switch (v.getId()) {
+                case R.id.social_share_button:
+                    AlertDialog shareDialog = new AlertDialog.Builder(context)
+                            .setItems(R.array.post_share_dialog_list_items, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case 0:
+                                            // Share link
+                                            Helpers.socialShareLink(context, selectedPost.getUrl());
+                                            break;
+                                        case 1:
+                                            // Share comments
+                                            Helpers.socialShareLink(context, Globals.BASE_API_URL + selectedPost.getPermalink());
+                                            break;
+                                    }
+                                }
+                            })
+                            .create();
+                    shareDialog.show();
+                    break;
+                case R.id.more_options_button:
+                    AlertDialog moreOptionsDialog = new AlertDialog.Builder(context)
+                            .setItems(R.array.post_options_dialog_list_items, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case 0:
+                                            // View subreddit
+                                            Toast.makeText(context, selectedPost.getSubreddit(), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 1:
+                                            // View OP's profile
+                                            Toast.makeText(context, selectedPost.getAuthor(), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 2:
+                                            // View link in browser
+                                            Helpers.viewURLInBrowser(context, selectedPost.getUrl());
+                                            break;
+                                        case 3:
+                                            // View comments in browser
+                                            Helpers.viewURLInBrowser(context, Globals.BASE_API_URL + selectedPost.getPermalink());
+                                            break;
+                                    }
+                                }
+                            })
+                            .create();
+                    moreOptionsDialog.show();
+                    break;
+            }
         }
     }
 }

@@ -6,4 +6,9 @@
         <item>View link in browser</item>
         <item>View comments in browser</item>
     </string-array>
+
+    <string-array name="post_share_dialog_list_items">
+        <item>Share link</item>
+        <item>Share comments</item>
+    </string-array>
 </resources>

@@ -117,4 +117,20 @@ public class Helpers {
         }
     }
 
+    public static void socialShareLink(Context context, String linkToShare) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND)
+                .setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, linkToShare);
+
+        // check if intent can be handled
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> infos = packageManager.queryIntentActivities(shareIntent, 0);
+        if (infos.size() > 0) {
+            context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.social_share_dialog_title)));
+        }
+        else {
+            Toast.makeText(context, R.string.error_intent_cannot_be_handled, Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
