@@ -16,6 +16,7 @@ import com.android.redditreader.R;
 import com.android.redditreader.models.Post;
 import com.android.redditreader.utils.Globals;
 import com.android.redditreader.utils.Helpers;
+import com.manas.asyncimageloader.AsyncImageLoader;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         holder.numCommentsTextView.setText(post.getNum_comments() == 1 ? post.getNum_comments() + " comment" : post.getNum_comments() + " comments");
         holder.scoreTextView.setText(post.getScore() == 1 ? post.getScore() + " point" : post.getScore() + " points");
         holder.infoTextView.setText(post.getAuthor() + " • " + post.getCreated() + " • " +  post.getSubreddit() + " • " + post.getDomain());
+        if (post.getThumbnail().length() > 0) {
+            holder.thumbnailImageView.setVisibility(View.VISIBLE);
+            AsyncImageLoader.getInstance().displayImage(holder.thumbnailImageView, post.getThumbnail());
+        }
+        else {
+            holder.thumbnailImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
