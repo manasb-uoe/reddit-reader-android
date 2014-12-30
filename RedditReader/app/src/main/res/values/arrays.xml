@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="post_options_dialog_list_items">
+       <item>View subreddit</item>
+        <item>View OP\'s profile</item>
+        <item>View link in browser</item>
+        <item>View comments in browser</item>
+    </string-array>
+</resources>

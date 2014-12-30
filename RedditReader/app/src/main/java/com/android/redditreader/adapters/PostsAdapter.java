@@ -1,6 +1,8 @@
 package com.android.redditreader.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.redditreader.R;
 import com.android.redditreader.models.Post;
+import com.android.redditreader.utils.Globals;
+import com.android.redditreader.utils.Helpers;
 
 import java.util.ArrayList;
 
@@ -19,6 +24,7 @@ import java.util.ArrayList;
  */
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHolder> {
 
+    private final String TAG = PostsAdapter.class.getSimpleName();
     private Context context;
     public ArrayList<Post> posts;
 
@@ -56,6 +62,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         private ImageView thumbnailImageView;
         private ImageButton upvoteButton;
         private ImageButton downvoteButton;
+        private ImageButton moreOptionsButton;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -66,11 +73,44 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             thumbnailImageView = (ImageView) itemView.findViewById(R.id.thumbnail_imageview);
             upvoteButton = (ImageButton) itemView.findViewById(R.id.upvote_button);
             downvoteButton = (ImageButton) itemView.findViewById(R.id.downvote_button);
+            moreOptionsButton = (ImageButton) itemView.findViewById(R.id.more_options_button);
+
+            moreOptionsButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            // TODO handle card click event
+            final Post selectedPost = posts.get(getPosition());
+
+            if (v.getId() == R.id.more_options_button) {
+                AlertDialog moreOptionsDialog = new AlertDialog.Builder(context)
+                .setItems(R.array.post_options_dialog_list_items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                // View subreddit
+                                Toast.makeText(context, selectedPost.getSubreddit(), Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                // View OP's profile
+                                Toast.makeText(context, selectedPost.getAuthor(), Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2:
+                                // View link in browser
+                                Helpers.viewURLInBrowser(context, selectedPost.getUrl());
+                                break;
+                            case 3:
+                                // View comments in browser
+                                Helpers.viewURLInBrowser(context, Globals.BASE_API_URL + selectedPost.getPermalink());
+                                break;
+                        }
+                    }
+                })
+                .create();
+                moreOptionsDialog.show();
+
+             }
         }
     }
 }
