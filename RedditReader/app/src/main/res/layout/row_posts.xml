@@ -24,7 +24,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_toLeftOf="@+id/thumbnail_imageview"
-                android:layout_marginRight="10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true">
 
@@ -47,12 +46,13 @@
 
             </LinearLayout>
 
-            <ImageView
+            <com.android.redditreader.utils.RoundedImageView
                 android:id="@+id/thumbnail_imageview"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="right"
                 android:layout_marginTop="4dp"
+                android:layout_marginLeft="10dp"
                 android:src="@android:drawable/screen_background_dark_transparent"
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
