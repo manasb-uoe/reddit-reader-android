@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/navigation_drawer_background_light"
     android:orientation="vertical"
+    android:clickable="true"
     tools:context="com.android.myredditreader.fragments.NavigationDrawerFragment">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/subreddits_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/subreddit_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navigation_drawer_list_item_height"
+    android:clickable="true"
+    android:background="?android:selectableItemBackground">
+
+    <TextView
+        android:id="@+id/subreddit"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_primary"
+        android:fontFamily="sans-serif-medium"
+        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+        android:paddingRight="@dimen/navigation_drawer_padding_left_right"/>
+
+</LinearLayout>

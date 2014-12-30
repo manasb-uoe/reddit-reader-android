@@ -21,5 +21,10 @@
     <string name="action_sort_from_all">All</string>
     <string name="error_intent_cannot_be_handled">No Activity found to handle this intent</string>
     <string name="social_share_dialog_title">Social Share</string>
+    <string name="navigation_drawer_action_user">User</string>
+    <string name="navigation_drawer_action_subreddits">Subreddits</string>
+    <string name="navigation_drawer_action_settings">Settings</string>
+    <string name="navigation_drawer_subheader_subreddits">Subreddits</string>
+    <string name="navigation_drawer_add_account">Add account</string>
 
 </resources>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/accent">
+
+        <RelativeLayout
+            android:id="@+id/account_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:actionBarItemBackground"
+            android:clickable="true"
+            android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+            android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+            android:paddingBottom="10dp"
+            android:visibility="gone"
+            android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/username_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="enthusiast_94"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:layout_alignBottom="@+id/up_down_imageview"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/up_down_imageview" />
+
+            <ImageView
+                android:id="@+id/up_down_imageview"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_navigation_arrow_drop_down"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/add_account_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:actionBarItemBackground"
+            android:clickable="true"
+            android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+            android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+            android:paddingBottom="10dp"
+            android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/add_account_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="@string/navigation_drawer_add_account"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:layout_alignBottom="@+id/add_account_imageview"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/add_account_imageview" />
+
+            <ImageView
+                android:id="@+id/add_account_imageview"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_content_add"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/view_user_profile_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_drawer_list_item_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
+
+        <ImageView
+            android:layout_width="@dimen/navigation_drawer_list_item_icon_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_social_person"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/navigation_drawer_action_user"
+            android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
+            android:gravity="center_vertical"
+            android:textColor="#DE000000"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/manage_subreddits_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_drawer_list_item_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
+
+        <ImageView
+            android:layout_width="@dimen/navigation_drawer_list_item_icon_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_subreddit"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/navigation_drawer_action_subreddits"
+            android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
+            android:gravity="center_vertical"
+            android:textColor="#DE000000"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view_setttings_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_drawer_list_item_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="@dimen/navigation_drawer_list_item_icon_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_settings"/>
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/navigation_drawer_action_settings"
+            android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_primary"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_light"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/navigation_drawer_list_item_height"
+        android:textSize="14sp"
+        android:text="@string/navigation_drawer_subheader_subreddits"
+        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+        android:gravity="center"
+        android:textColor="@color/text_secondary"/>
+
+
+</LinearLayout>

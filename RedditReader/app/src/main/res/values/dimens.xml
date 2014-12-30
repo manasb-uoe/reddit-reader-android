@@ -6,4 +6,8 @@
     <dimen name="card_icon_width_height">42dp</dimen>
     <dimen name="card_icon_padding">11dp</dimen>
     <dimen name="card_icon_gap_width">2dp</dimen>
+    <dimen name="navigation_drawer_padding_left_right">16dp</dimen>
+    <dimen name="navigation_drawer_list_item_icon_width">28dp</dimen>
+    <dimen name="navigation_drawer_list_item_height">52dp</dimen>
+    <dimen name="navigation_drawer_list_item_text_margin_left">25dp</dimen>
 </resources>
