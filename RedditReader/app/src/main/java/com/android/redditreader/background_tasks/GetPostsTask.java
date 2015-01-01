@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 
 import com.android.redditreader.adapters.PostsAdapter;
 import com.android.redditreader.models.Post;
-import com.android.redditreader.utils.DataParser;
+import com.android.redditreader.utils.RedditApiWrapper;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class GetPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
 
     @Override
     protected ArrayList<Post> doInBackground(Void... params) {
-        return DataParser.parsePosts(url);
+        return RedditApiWrapper.getPosts(url);
     }
 
     @Override

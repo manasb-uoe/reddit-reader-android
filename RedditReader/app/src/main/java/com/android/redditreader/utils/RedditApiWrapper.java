@@ -8,20 +8,50 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 /**
  * Created by Manas on 29-12-2014.
  */
-public class DataParser {
+public class RedditApiWrapper {
 
-    private static final String TAG = DataParser.class.getSimpleName();
+    private static final String TAG = RedditApiWrapper.class.getSimpleName();
 
-    public static ArrayList<Post> parsePosts(URL url) {
+    public static boolean login(String username, String password) {
+        HttpURLConnection conn = null;
+
+        try {
+            conn = Helpers.getConnection(new URL(Globals.REDDIT_LOGIN_URL), "POST");
+            String postData = "user=" + username + "&passwd=" + password + "&rem=True";
+            Helpers.writeToConnection(conn, postData);
+            String cookie = conn.getHeaderField("set-cookie");
+            Log.e(TAG, cookie);
+            if (cookie != null) {
+                cookie = cookie.split(";")[0];
+                if (cookie.startsWith("reddit_session")) {
+                    Globals.SESSION_COOKIE = cookie;
+                    return true;
+                }
+            }
+        }
+        catch (MalformedURLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return false;
+    }
+
+    public static ArrayList<Post> getPosts(URL url) {
         ArrayList<Post> posts = null;
 
-        String content = Helpers.readContentFromURL(url);
+        String content = Helpers.readStringFromConnection(Helpers.getConnection(url, "GET"));
 
         if (content != null) {
             try {

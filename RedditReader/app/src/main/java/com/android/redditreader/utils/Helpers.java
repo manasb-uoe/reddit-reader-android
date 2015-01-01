@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,12 +27,18 @@ public class Helpers {
 
     private static final  String TAG = Helpers.class.getSimpleName();
 
-    public static HttpURLConnection getConnection(URL url) {
+    public static HttpURLConnection getConnection(URL url, String requestMethod) {
         HttpURLConnection urlConnection = null;
 
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod(requestMethod);
+            if (requestMethod.equals("POST")) {
+                urlConnection.setDoOutput(true);
+            }
+            if (Globals.SESSION_COOKIE != null) {
+                urlConnection.setRequestProperty("Cookie", Globals.SESSION_COOKIE);
+            }
             urlConnection.connect();
         }
         catch (IOException e) {
@@ -41,8 +48,27 @@ public class Helpers {
         return urlConnection;
     }
 
-    public static String readContentFromURL(URL url) {
-        HttpURLConnection urlConnection = getConnection(url);
+    public static void writeToConnection(HttpURLConnection conn, String postData) {
+        OutputStreamWriter osWriter = null;
+        try {
+            osWriter = new OutputStreamWriter(conn.getOutputStream());
+            osWriter.write(postData);
+        }
+        catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        finally {
+            if (osWriter != null) {
+                try {
+                    osWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static String readStringFromConnection(HttpURLConnection urlConnection) {
         BufferedReader bufferedReader = null;
         String content = null;
 

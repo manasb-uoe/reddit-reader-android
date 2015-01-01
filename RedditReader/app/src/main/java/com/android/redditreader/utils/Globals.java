@@ -14,4 +14,7 @@ public class Globals {
     public static String CURRENT_SORT = DEFAULT_SORT;
     public static String CURRENT_TIME = null;
     public static String CURRENT_POSTS_AFTER = null;
+
+    public static final String REDDIT_LOGIN_URL = "https://ssl.reddit.com/api/login";
+    public static String SESSION_COOKIE = null;
 }
