@@ -51,6 +51,7 @@ public class PostsListFragment extends Fragment {
 
     public void refreshPosts() {
         new GetPostsTask(Helpers.getCurrentSubredditURL(), postsAdapter, postsRecyclerView, postsProgressBar).execute();
+        postsRecyclerView.scrollToPosition(0);
     }
 
 }

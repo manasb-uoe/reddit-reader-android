@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.android.redditreader.R;
 import com.android.redditreader.fragments.PostsListFragment;
@@ -18,9 +19,11 @@ public class MainActivity extends ActionBarActivity {
     private final String TAG = MainActivity.class.getSimpleName();
 
     private ActionBar actionBar;
-    private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private PostsListFragment postsListFragment;
+
+    public DrawerLayout drawerLayout;
+    public PostsListFragment postsListFragment;
+    public View navigationDrawerContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void findViews() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        navigationDrawerContainer = drawerLayout.findViewById(R.id.navigation_drawer_fragment);
     }
 
     private void setUpNavigationDrawer() {
@@ -50,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
         drawerToggle.syncState();
     }
 
-    private void updateActionBarText() {
+    public void updateActionBarText() {
         if (!Globals.CURRENT_SUBREDDIT.equals(Globals.DEFAULT_SUBREDDIT)) {
             actionBar.setTitle("/r/" + Globals.CURRENT_SUBREDDIT);
         }
