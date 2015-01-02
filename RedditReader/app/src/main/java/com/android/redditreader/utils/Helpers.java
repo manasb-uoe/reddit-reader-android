@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.android.redditreader.R;
+import com.android.redditreader.models.Subreddit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -132,6 +134,24 @@ public class Helpers {
         return builtURL;
     }
 
+    public static URL getUserSubredditsURL() {
+        String base = Globals.BASE_API_URL + "/reddits/mine.json";
+
+        URL builtURL;
+        try {
+            Uri.Builder builder = Uri.parse(base).buildUpon();
+            builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_SUBREDDITS_LIMIT));
+            builder = Globals.CURRENT_SUBREDDITS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_SUBREDDITS_AFTER) : builder;
+            builtURL = new URL(builder.build().toString());
+        }
+        catch (MalformedURLException e) {
+            builtURL = null;
+            Log.e(TAG, e.getMessage());
+        }
+
+        return builtURL;
+    }
+
     public static void viewURLInBrowser(Context context, String urlToView) {
         Intent viewIntent = new Intent(Intent.ACTION_VIEW);
         viewIntent.setData(Uri.parse(urlToView));
@@ -178,6 +198,38 @@ public class Helpers {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
         editor.apply();
+    }
+
+    public static ArrayList<Subreddit> getDefaultSubredditsFromAsset(Context context) {
+        final String defaultSubredditsAsset = "default_subreddits.txt";
+
+        BufferedReader bufferedReader = null;
+        ArrayList<Subreddit> subreddits = new ArrayList<>();
+
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(context.getAssets().open(defaultSubredditsAsset)));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                Subreddit subreddit = new Subreddit();
+                subreddit.setName(line);
+                subreddits.add(subreddit);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                }
+                catch (IOException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        }
+
+        return subreddits;
     }
 
 }
