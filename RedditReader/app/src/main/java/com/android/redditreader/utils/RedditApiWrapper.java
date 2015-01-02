@@ -28,7 +28,7 @@ public class RedditApiWrapper {
             String postData = "user=" + username + "&passwd=" + password + "&rem=True";
             Helpers.writeToConnection(conn, postData);
             String cookie = conn.getHeaderField("set-cookie");
-            Log.e(TAG, cookie);
+
             if (cookie != null) {
                 cookie = cookie.split(";")[0];
                 if (cookie.startsWith("reddit_session")) {

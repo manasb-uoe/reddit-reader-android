@@ -19,7 +19,7 @@
             android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
             android:paddingRight="@dimen/navigation_drawer_padding_left_right"
             android:paddingBottom="10dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:gravity="bottom">
 
             <TextView
