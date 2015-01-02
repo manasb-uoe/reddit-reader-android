@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="25dp">
+    android:paddingTop="15dp"
+    android:paddingLeft="@dimen/dialog_padding"
+    android:paddingRight="@dimen/dialog_padding">
 
     <EditText
         android:id="@+id/username_edittext"
