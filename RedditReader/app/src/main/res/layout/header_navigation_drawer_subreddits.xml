@@ -103,7 +103,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/navigation_drawer_action_user"
+            android:text="@string/navigation_drawer_action_profile"
             android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
             android:gravity="center_vertical"
             android:textColor="#DE000000"
