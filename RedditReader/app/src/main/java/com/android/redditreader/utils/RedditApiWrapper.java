@@ -1,8 +1,10 @@
 package com.android.redditreader.utils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.redditreader.models.Post;
+import com.android.redditreader.models.Subreddit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +35,7 @@ public class RedditApiWrapper {
                 cookie = cookie.split(";")[0];
                 if (cookie.startsWith("reddit_session")) {
                     Globals.SESSION_COOKIE = cookie;
+                    Log.e(TAG, Globals.SESSION_COOKIE);
                     return true;
                 }
             }
@@ -55,11 +58,11 @@ public class RedditApiWrapper {
 
         if (content != null) {
             try {
-                posts = new ArrayList<Post>();
-
                 JSONObject main = new JSONObject(content);
                 JSONObject data = (JSONObject) main.get("data");
                 JSONArray children = (JSONArray) data.get("children");
+
+                posts = new ArrayList<Post>();
 
 //                TODO get after id
 //                Utility.POSTS_AFTER = (String) data.get("after");
@@ -76,7 +79,7 @@ public class RedditApiWrapper {
                     post.setAuthor(data2.get("author").toString());
                     post.setScore(Integer.parseInt(data2.get("score").toString()));
                     post.setCreated(data2.get("created_utc").toString());
-                    post.setNsfw(Boolean.valueOf(data2.get("over_18").toString()));
+                    post.setNsfw(data2.getBoolean("over_18"));
                     post.setThumbnail(data2.get("thumbnail").toString());
                     post.setUrl(data2.get("url").toString());
                     post.setTitle(data2.get("title").toString());
@@ -93,5 +96,62 @@ public class RedditApiWrapper {
             }
         }
         return posts;
+    }
+
+    public static ArrayList<Subreddit> getSubreddits(Context context) {
+        ArrayList<Subreddit> subreddits = new ArrayList<>();
+
+        if (Globals.SESSION_COOKIE != null) {
+            String content = Helpers.readStringFromConnection(Helpers.getConnection(Helpers.getUserSubredditsURL(), "GET"));
+            subreddits = parseSubreddits(content, subreddits);
+            while (Globals.CURRENT_SUBREDDITS_AFTER != null) {
+                content = Helpers.readStringFromConnection(Helpers.getConnection(Helpers.getUserSubredditsURL(), "GET"));
+                subreddits = parseSubreddits(content, subreddits);
+            }
+        }
+        else {
+            subreddits = Helpers.getDefaultSubredditsFromAsset(context);
+        }
+
+        // add front page as the first subreddit
+        Subreddit frontPage = new Subreddit();
+        frontPage.setName("Front Page");
+        subreddits.add(0, frontPage);
+
+        Log.e(TAG, subreddits.size()+"");
+        return subreddits;
+    }
+
+    private static ArrayList<Subreddit> parseSubreddits(String content, ArrayList<Subreddit> subreddits) {
+        try {
+            JSONObject main = new JSONObject(content);
+            JSONObject data = (JSONObject) main.get("data");
+            JSONArray children = (JSONArray) data.get("children");
+
+            if (data.isNull("after")) {
+                Globals.CURRENT_SUBREDDITS_AFTER = null;
+            }
+            else {
+                Globals.CURRENT_SUBREDDITS_AFTER = data.getString("after");
+            }
+
+            for (int i=0;i<children.length();i++) {
+                JSONObject subreddit_num = (JSONObject) children.get(i);
+                JSONObject data2 = (JSONObject) subreddit_num.get("data");
+
+                Subreddit subreddit = new Subreddit();
+                subreddit.setName(data2.getString("display_name"));
+                subreddit.setNumOfSubscribers(data2.getLong("subscribers"));
+                subreddit.setDescription(data2.getString("description_html"));
+                subreddit.setSubscribed(data2.getBoolean("user_is_subscriber"));
+                subreddits.add(subreddit);
+            }
+        }
+        catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+            subreddits = null;
+        }
+
+        return subreddits;
     }
 }
