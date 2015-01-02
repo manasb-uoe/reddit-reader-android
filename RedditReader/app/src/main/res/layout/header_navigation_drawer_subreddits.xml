@@ -178,12 +178,13 @@
         android:background="@color/divider_light"/>
 
     <TextView
+        android:id="@+id/subreddits_recycler_view_subheader_textview"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/navigation_drawer_list_item_height"
         android:textSize="14sp"
-        android:text="@string/navigation_drawer_subheader_subreddits"
         android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
         android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+        android:text="@string/navigation_drawer_subheader_subreddits_default"
         android:gravity="center"
         android:textColor="@color/text_secondary"/>
 

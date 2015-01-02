@@ -21,9 +21,9 @@ public class MainActivity extends ActionBarActivity {
     private ActionBar actionBar;
     private ActionBarDrawerToggle drawerToggle;
 
-    public DrawerLayout drawerLayout;
     public PostsListFragment postsListFragment;
-    public View navigationDrawerContainer;
+    private View navigationDrawerContainer;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,12 @@ public class MainActivity extends ActionBarActivity {
         }
         else {
             actionBar.setSubtitle(Globals.CURRENT_SORT);
+        }
+    }
+
+    public void closeNavigationDrawer() {
+        if (drawerLayout.isDrawerOpen(navigationDrawerContainer)) {
+            drawerLayout.closeDrawer(navigationDrawerContainer);
         }
     }
 

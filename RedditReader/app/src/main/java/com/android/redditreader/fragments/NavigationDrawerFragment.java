@@ -1,8 +1,12 @@
 package com.android.redditreader.fragments;
 
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,19 +15,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.redditreader.R;
 import com.android.redditreader.activities.MainActivity;
+import com.android.redditreader.models.Subreddit;
 import com.android.redditreader.utils.Globals;
+import com.android.redditreader.utils.Helpers;
+import com.android.redditreader.utils.RedditApiWrapper;
 
 import java.util.ArrayList;
 
 
 public class NavigationDrawerFragment extends Fragment {
 
-    private RecyclerView subredditsRecyclerView;
     private MainActivity mainActivity;
+    private RecyclerView subredditsRecyclerView;
+    private ProgressBar subredditsProgressBar;
+    private NavigationDrawerSubredditsAdapter navigationDrawerSubredditsAdapter;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -45,13 +58,20 @@ public class NavigationDrawerFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
 
         // set up subreddits recycler view
-        subredditsRecyclerView.setAdapter(new NavigationDrawerSubredditsAdapter(new ArrayList<String>()));
+        navigationDrawerSubredditsAdapter = new NavigationDrawerSubredditsAdapter(new ArrayList<Subreddit>());
+        subredditsRecyclerView.setAdapter(navigationDrawerSubredditsAdapter);
         subredditsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        refreshSubreddits();
     }
 
     private void findViews(View view) {
         subredditsRecyclerView = (RecyclerView) view.findViewById(R.id.subreddits_recycler_view);
+        subredditsProgressBar = (ProgressBar) view.findViewById(R.id.subreddits_progressbar);
+    }
+
+    private void refreshSubreddits() {
+        new GetSubredditsTask().execute();
     }
 
 
@@ -62,25 +82,26 @@ public class NavigationDrawerFragment extends Fragment {
         private final int TYPE_HEADAER = 0;
         private final int TYPE_ITEM = 1;
 
-        private ArrayList<String> subreddits;
+        public ArrayList<Subreddit> subreddits;
 
         private int currentPos = 1;
         private int oldPos = 1;
 
-        public NavigationDrawerSubredditsAdapter(ArrayList<String> subreddits) {
+        public NavigationDrawerSubredditsAdapter(ArrayList<Subreddit> subreddits) {
             this.subreddits = subreddits;
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = null;
+            LayoutInflater layoutInflater = LayoutInflater.from(mainActivity);
 
             if (viewType == TYPE_HEADAER) {
-                itemView = LayoutInflater.from(mainActivity).inflate(R.layout.header_navigation_drawer_subreddits, parent, false);
+                itemView = layoutInflater.inflate(R.layout.header_navigation_drawer_subreddits, parent, false);
                 return new HeaderViewHolder(itemView);
             }
             else {
-                itemView = LayoutInflater.from(mainActivity).inflate(R.layout.row_navigation_drawer_subreddits, parent, false);
+                itemView = layoutInflater.inflate(R.layout.row_navigation_drawer_subreddits, parent, false);
                 return new SubredditViewHolder(itemView);
             }
         }
@@ -89,7 +110,7 @@ public class NavigationDrawerFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof SubredditViewHolder) {
                 SubredditViewHolder subredditViewHolder = (SubredditViewHolder) holder;
-                subredditViewHolder.subreddit.setText(subreddits.get(position - 1));
+                subredditViewHolder.subreddit.setText(subreddits.get(position - 1).getName());
 
                 Resources res = mainActivity.getResources();
                 if (position == currentPos) {
@@ -118,21 +139,144 @@ public class NavigationDrawerFragment extends Fragment {
             }
         }
 
-        private class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             private View addAccountContainer;
             private View accountInfoContainer;
+            private TextView usernameTextView;
             private View viewUserProfileContainer;
             private View manageSubredditsContainer;
             private View viewSettingsContainer;
+            private TextView subredditsRecyclerViewHeadingTextView;
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
-                accountInfoContainer = itemView.findViewById(R.id.account_info_container);
                 addAccountContainer = itemView.findViewById(R.id.add_account_container);
+                accountInfoContainer = itemView.findViewById(R.id.account_info_container);
+                usernameTextView = (TextView) accountInfoContainer.findViewById(R.id.username_textview);
                 viewUserProfileContainer = itemView.findViewById(R.id.view_user_profile_container);
                 manageSubredditsContainer = itemView.findViewById(R.id.manage_subreddits_container);
                 viewSettingsContainer = itemView.findViewById(R.id.view_setttings_container);
+                subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
+
+                addAccountContainer.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.add_account_container:
+                        showAddAccountDialog();
+                        break;
+                }
+            }
+
+            private void showAddAccountDialog() {
+                // inflate custom dialog view
+                View customView = mainActivity.getLayoutInflater().inflate(R.layout.dialog_add_account, null);
+                final EditText usernameEditText = (EditText) customView.findViewById(R.id.username_edittext);
+                final EditText passwordEditText = (EditText) customView.findViewById(R.id.password_edittext);
+
+                final AlertDialog addAccountDialog = new AlertDialog.Builder(mainActivity)
+                        .setView(customView)
+                        .setPositiveButton(R.string.add_account_dialog_positive, null)  // set to null as onClick would be overridden later
+                        .setNegativeButton(R.string.add_account_dialog_negative, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setTitle(R.string.add_account_dialog_title)
+                        .create();
+
+                addAccountDialog.show();
+
+                // override onClick of positive button as the default listener closes the dialog
+                Button positiveButton = addAccountDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Helpers.hideKeyboard(mainActivity, usernameEditText.getWindowToken());
+
+                        String username = usernameEditText.getText().toString().trim();
+                        String password = passwordEditText.getText().toString().trim();
+
+                        // validate user input
+                        if (username.length() == 0) {
+                            Toast.makeText(mainActivity, R.string.error_username_blank, Toast.LENGTH_SHORT).show();
+                        } else if (password.length() == 0) {
+                            Toast.makeText(mainActivity, R.string.error_password_blank, Toast.LENGTH_SHORT).show();
+                        } else {
+                            new AddAccountTask(username, password, addAccountDialog).execute();
+                        }
+                    }
+                });
+            }
+
+            private class AddAccountTask extends AsyncTask<Void, Void, Boolean> {
+
+                private final String TAG = AddAccountTask.class.getSimpleName();
+
+                private String username;
+                private String password;
+                private AlertDialog addAccountDialog;
+                private ProgressDialog progressDialog;
+
+                public AddAccountTask(String username, String password, AlertDialog addAccountDialog) {
+                    this.username = username;
+                    this.password = password;
+                    this.addAccountDialog = addAccountDialog;
+                }
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                    progressDialog = new ProgressDialog(mainActivity);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Adding account...");
+
+                    addAccountDialog.dismiss();
+                    progressDialog.show();
+                }
+
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    return RedditApiWrapper.login(username, password);
+                }
+
+                @Override
+                protected void onPostExecute(Boolean success) {
+                    super.onPostExecute(success);
+
+                    progressDialog.cancel();
+
+                    if (success) {
+                        if (addAccountContainer.getVisibility() == View.VISIBLE) {
+                            addAccountContainer.setVisibility(View.INVISIBLE);
+                        }
+                        if (accountInfoContainer.getVisibility() == View.INVISIBLE) {
+                            accountInfoContainer.setVisibility(View.VISIBLE);
+                        }
+
+                        mainActivity.closeNavigationDrawer();
+
+                        usernameTextView.setText(username);
+
+                        subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
+
+                        refreshSubreddits();
+
+                        mainActivity.postsListFragment.refreshPosts();
+
+                        String successMessageBase = getResources().getString(R.string.success_login_base);
+                        Toast.makeText(mainActivity, successMessageBase + username, Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        addAccountDialog.show();
+                        Toast.makeText(mainActivity, R.string.error_username_or_password_incorrect, Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         }
 
@@ -158,13 +302,42 @@ public class NavigationDrawerFragment extends Fragment {
                 notifyItemChanged(currentPos);
 
                 //close navigation drawer and refresh posts for the selected subreddit
-                mainActivity.drawerLayout.closeDrawer(mainActivity.navigationDrawerContainer);
+                mainActivity.closeNavigationDrawer();
                 Globals.CURRENT_SUBREDDIT = subreddit.getText().toString();
                 mainActivity.postsListFragment.refreshPosts();
                 mainActivity.updateActionBarText();
             }
         }
+    }
 
+    private class GetSubredditsTask extends AsyncTask<Void, Void, ArrayList<Subreddit>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            subredditsProgressBar.setVisibility(View.VISIBLE);
+            subredditsRecyclerView.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected ArrayList<Subreddit> doInBackground(Void... params) {
+            return RedditApiWrapper.getSubreddits(mainActivity);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Subreddit> subreddits) {
+            super.onPostExecute(subreddits);
+
+            navigationDrawerSubredditsAdapter.subreddits.clear();
+            navigationDrawerSubredditsAdapter.subreddits.addAll(subreddits);
+            navigationDrawerSubredditsAdapter.subreddits.trimToSize();
+            navigationDrawerSubredditsAdapter.notifyDataSetChanged();
+
+            subredditsProgressBar.setVisibility(View.INVISIBLE);
+            subredditsRecyclerView.setVisibility(View.VISIBLE);
+
+        }
     }
 
 }
