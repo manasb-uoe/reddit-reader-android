@@ -2,10 +2,13 @@ package com.android.redditreader.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.IBinder;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.android.redditreader.R;
@@ -38,6 +41,7 @@ public class Helpers {
             }
             if (Globals.SESSION_COOKIE != null) {
                 urlConnection.setRequestProperty("Cookie", Globals.SESSION_COOKIE);
+                Log.e(TAG, "request property set");
             }
             urlConnection.connect();
         }
@@ -157,6 +161,23 @@ public class Helpers {
         else {
             Toast.makeText(context, R.string.error_intent_cannot_be_handled, Toast.LENGTH_LONG).show();
         }
+    }
+
+    public static void hideKeyboard(Context context, IBinder token) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(token, 0);
+    }
+
+    public static String readFromPreferences(Context context, String fileName, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, null);
+    }
+
+    public static void writeToPreferences(Context context, String fileName, String key, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
 }
