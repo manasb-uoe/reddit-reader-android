@@ -8,11 +8,14 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.redditreader.R;
 import com.android.redditreader.models.Subreddit;
+import com.manas.asyncimageloader.AsyncImageLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -230,6 +233,32 @@ public class Helpers {
         }
 
         return subreddits;
+    }
+
+    public static void displayThumbnail(String thumbnailURL, ImageView thumbnailImageView) {
+        if (thumbnailURL.length() > 0) {
+            thumbnailImageView.setVisibility(View.VISIBLE);
+
+            switch (thumbnailURL) {
+                case "self":
+                    thumbnailImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, Globals.THUMBNAIL_SELF);
+                    break;
+
+                case "nsfw":
+                    thumbnailImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, Globals.THUMBNAIL_NSFW);
+                    break;
+
+                default:
+                    thumbnailImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, thumbnailURL);
+                    break;
+            }
+        }
+        else {
+            thumbnailImageView.setVisibility(View.GONE);
+        }
     }
 
 }
