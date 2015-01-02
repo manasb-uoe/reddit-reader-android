@@ -268,13 +268,14 @@ public class NavigationDrawerFragment extends Fragment {
                         Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_USERNAME_KEY, username);
                         Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_SESSION_COOKIE_KEY, Globals.SESSION_COOKIE);
 
-                        // update latest username in global preferences
+                        // update last username in global preferences
                         Helpers.writeToPreferences(mainActivity, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY, username);
+
+                        // TODO add user account to list of existing accounts
 
                         refreshNavigationDrawerHeader();
 
-                        String successMessageBase = getResources().getString(R.string.success_login_base);
-                        Toast.makeText(mainActivity, successMessageBase + " " + username, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivity, R.string.success_login, Toast.LENGTH_LONG).show();
                     }
                     else {
                         addAccountDialog.show();

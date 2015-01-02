@@ -35,6 +35,6 @@
     <string name="error_username_blank">Username cannot be left blank</string>
     <string name="error_password_blank">Password cannot be left blank</string>
     <string name="error_username_or_password_incorrect">Incorrect username or password</string>
-    <string name="success_login_base">Successfully logged in as:</string>
+    <string name="success_login">Successfully logged in</string>
 
 </resources>
