@@ -191,18 +191,6 @@ public class Helpers {
         imm.hideSoftInputFromWindow(token, 0);
     }
 
-    public static String readFromPreferences(Context context, String fileName, String key) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(key, null);
-    }
-
-    public static void writeToPreferences(Context context, String fileName, String key, String value) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
-
     public static ArrayList<Subreddit> getDefaultSubredditsFromAsset(Context context) {
         final String defaultSubredditsAsset = "default_subreddits.txt";
 
@@ -259,6 +247,22 @@ public class Helpers {
         else {
             thumbnailImageView.setVisibility(View.GONE);
         }
+    }
+
+    public static String readFromPreferences(Context context, String fileName, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, null);
+    }
+
+    public static void writeToPreferences(Context context, String fileName, String key, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String getUserPreferencesFileName(String username) {
+        return username + "_prefs";
     }
 
 }

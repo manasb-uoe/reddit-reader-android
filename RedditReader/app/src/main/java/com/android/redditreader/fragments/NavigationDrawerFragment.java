@@ -122,6 +122,9 @@ public class NavigationDrawerFragment extends Fragment {
                     subredditViewHolder.subreddit.setBackgroundColor(Color.TRANSPARENT);
                 }
             }
+            else if (holder instanceof HeaderViewHolder) {
+                HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            }
         }
 
         @Override
@@ -160,6 +163,8 @@ public class NavigationDrawerFragment extends Fragment {
                 subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
 
                 addAccountContainer.setOnClickListener(this);
+
+                refreshNavigationDrawerHeader();
             }
 
             @Override
@@ -252,30 +257,51 @@ public class NavigationDrawerFragment extends Fragment {
                     progressDialog.cancel();
 
                     if (success) {
-                        if (addAccountContainer.getVisibility() == View.VISIBLE) {
-                            addAccountContainer.setVisibility(View.INVISIBLE);
-                        }
-                        if (accountInfoContainer.getVisibility() == View.INVISIBLE) {
-                            accountInfoContainer.setVisibility(View.VISIBLE);
-                        }
-
                         mainActivity.closeNavigationDrawer();
-
-                        usernameTextView.setText(username);
-
-                        subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
 
                         refreshSubreddits();
 
                         mainActivity.postsListFragment.refreshPosts();
 
+                        // save current user's session cookie and username in user preferences
+                        String fileName = Helpers.getUserPreferencesFileName(username);
+                        Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_USERNAME_KEY, username);
+                        Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_SESSION_COOKIE_KEY, Globals.SESSION_COOKIE);
+
+                        // update latest username in global preferences
+                        Helpers.writeToPreferences(mainActivity, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY, username);
+
+                        refreshNavigationDrawerHeader();
+
                         String successMessageBase = getResources().getString(R.string.success_login_base);
-                        Toast.makeText(mainActivity, successMessageBase + username, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivity, successMessageBase + " " + username, Toast.LENGTH_LONG).show();
                     }
                     else {
                         addAccountDialog.show();
                         Toast.makeText(mainActivity, R.string.error_username_or_password_incorrect, Toast.LENGTH_LONG).show();
                     }
+                }
+            }
+
+            /**
+             * Should be invoked AFTER username has been written to GLOBAL shared preferences
+             */
+            private void refreshNavigationDrawerHeader() {
+                if (Globals.SESSION_COOKIE != null) {
+                    usernameTextView.setText(Helpers.readFromPreferences(mainActivity, Globals.GLOBAL_PREFS,
+                            Globals.GLOBAL_PREFS_LAST_USERNAME_KEY));
+
+                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
+
+                    accountInfoContainer.setVisibility(View.VISIBLE);
+                    addAccountContainer.setVisibility(View.INVISIBLE);
+
+                }
+                else {
+                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_default);
+
+                    accountInfoContainer.setVisibility(View.INVISIBLE);
+                    addAccountContainer.setVisibility(View.VISIBLE);
                 }
             }
         }

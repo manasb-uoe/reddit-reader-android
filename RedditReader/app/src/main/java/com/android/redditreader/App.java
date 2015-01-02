@@ -2,6 +2,8 @@ package com.android.redditreader;
 
 import android.app.Application;
 
+import com.android.redditreader.utils.Globals;
+import com.android.redditreader.utils.Helpers;
 import com.manas.asyncimageloader.AsyncImageLoader;
 import com.manas.asyncimageloader.AsyncImageLoaderConfig;
 
@@ -16,7 +18,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //init AsyncImageLoader with default values
+        // update global SESSION_COOKIE with last authenticated user's session cookie
+        String lastUsername = Helpers.readFromPreferences(this, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY);
+        Globals.SESSION_COOKIE = Helpers.readFromPreferences(this, Helpers.getUserPreferencesFileName(lastUsername), Globals.USER_PREFS_SESSION_COOKIE_KEY);
+
+        // init AsyncImageLoader
         AsyncImageLoaderConfig config = new AsyncImageLoaderConfig.Builder(this)
                 .setMemoryCacheSize((int) (Runtime.getRuntime().maxMemory() / 8))
                 .setDiskCacheLocation(new File(getExternalCacheDir().getAbsolutePath() + "/images"))

@@ -5,10 +5,17 @@ package com.android.redditreader.utils;
  */
 public class Globals {
 
+    // urls
     public static final String BASE_API_URL = "http://www.reddit.com";
     public static final String REDDIT_LOGIN_URL = "https://ssl.reddit.com/api/login";
     public static final String THUMBNAIL_SELF = "http://i.imgur.com/7TqyJpu.png";
     public static final String THUMBNAIL_NSFW = "http://i.imgur.com/9YCjKOr.png";
+
+    // shared preferences file and key names
+    public static final String GLOBAL_PREFS = "global_prefs";
+    public static final String GLOBAL_PREFS_LAST_USERNAME_KEY = "last_username";
+    public static final String USER_PREFS_SESSION_COOKIE_KEY = "session_key";
+    public static final String USER_PREFS_USERNAME_KEY = "username";
 
     public static final String DEFAULT_SUBREDDIT = "Front Page";
     public static final String DEFAULT_SORT = "Hot";
@@ -21,4 +28,6 @@ public class Globals {
     public static String CURRENT_SUBREDDITS_AFTER = null;
 
     public static String SESSION_COOKIE = null;
+
+
 }
