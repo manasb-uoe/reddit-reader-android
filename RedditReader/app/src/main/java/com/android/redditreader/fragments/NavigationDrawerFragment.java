@@ -145,6 +145,18 @@ public class NavigationDrawerFragment extends Fragment {
             }
         }
 
+        /**
+         * Updates index of selected item based on the current subreddit
+         */
+        public void resetSelectionIndex() {
+            for (int i=0; i<subreddits.size(); i++) {
+                if (subreddits.get(i).getName().equals(Globals.CURRENT_SUBREDDIT)) {
+                    currentPos = i + 1;
+                    oldPos = currentPos;
+                }
+            }
+        }
+
         private class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             private View addAccountContainer;
@@ -269,10 +281,11 @@ public class NavigationDrawerFragment extends Fragment {
                                                 Globals.USER_PREFS_SESSION_COOKIE_KEY);
 
                                         RedditApiWrapper.setSubredditDefaults();
-                                        mainActivity.updateActionBarText();
                                         refreshSubreddits();
 
                                         mainActivity.postsListFragment.refreshPosts();
+
+                                        mainActivity.updateActionBarText();
 
                                         refreshNavigationDrawerHeader();
 
@@ -336,10 +349,12 @@ public class NavigationDrawerFragment extends Fragment {
 
                     if (success) {
                         RedditApiWrapper.setSubredditDefaults();
-                        mainActivity.updateActionBarText();
+
                         refreshSubreddits();
 
                         mainActivity.postsListFragment.refreshPosts();
+
+                        mainActivity.updateActionBarText();
 
                         // save current user's session cookie and username in user preferences
                         String fileName = Helpers.getUserPreferencesFileName(username);
@@ -438,6 +453,7 @@ public class NavigationDrawerFragment extends Fragment {
             navigationDrawerSubredditsAdapter.subreddits.clear();
             navigationDrawerSubredditsAdapter.subreddits.addAll(subreddits);
             navigationDrawerSubredditsAdapter.subreddits.trimToSize();
+            navigationDrawerSubredditsAdapter.resetSelectionIndex();
             navigationDrawerSubredditsAdapter.notifyDataSetChanged();
 
             subredditsProgressBar.setVisibility(View.INVISIBLE);
