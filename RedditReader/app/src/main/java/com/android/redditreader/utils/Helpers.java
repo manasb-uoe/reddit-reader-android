@@ -52,7 +52,7 @@ public class Helpers {
             }
             urlConnection.connect();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
 
         return urlConnection;
@@ -70,7 +70,7 @@ public class Helpers {
                 try {
                     osWriter.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
                 }
             }
         }
@@ -157,7 +157,7 @@ public class Helpers {
                 subreddits.add(subreddit);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } finally {
             if (bufferedReader != null) {
                 try {

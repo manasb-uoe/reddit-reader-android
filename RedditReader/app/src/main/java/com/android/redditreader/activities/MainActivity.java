@@ -101,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
         }
         if (id == R.id.action_sort_top_hour || id == R.id.action_sort_top_day || id == R.id.action_sort_top_week
                 || id == R.id.action_sort_top_month || id == R.id.action_sort_top_year || id == R.id.action_sort_top_all) {
-            Globals.CURRENT_SORT = "Top";
+            Globals.CURRENT_SORT = getResources().getString(R.string.action_sort_top);
             Globals.CURRENT_TIME = item.getTitle().toString();
 
             updateActionBarText();
@@ -111,7 +111,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_sort_controversial_hour || id == R.id.action_sort_controversial_day
                 || id == R.id.action_sort_controversial_week || id == R.id.action_sort_controversial_month ||
                 id == R.id.action_sort_controversial_year || id == R.id.action_sort_controversial_all) {
-            Globals.CURRENT_SORT = "Controversial";
+            Globals.CURRENT_SORT = getResources().getString(R.string.action_sort_controversial);
             Globals.CURRENT_TIME = item.getTitle().toString();
 
             updateActionBarText();
