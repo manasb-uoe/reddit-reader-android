@@ -35,6 +35,12 @@
     <string name="error_username_blank">Username cannot be left blank</string>
     <string name="error_password_blank">Password cannot be left blank</string>
     <string name="error_username_or_password_incorrect">Incorrect username or password</string>
-    <string name="success_login">Successfully logged in</string>
+    <string name="success_login_base">Logged in as:</string>
+    <string name="choose_account_dialog_title">Choose Account</string>
+    <string name="error_no_existing_accounts">No accounts saved</string>
+    <string name="choose_account_dialog_positive">Done</string>
+    <string name="choose_account_dialog_negative">Cancel</string>
+    <string name="choose_account_dialog_add_account_item">Add Account</string>
+    <string name="add_account_progress_dialog_message">Adding account…</string>
 
 </resources>

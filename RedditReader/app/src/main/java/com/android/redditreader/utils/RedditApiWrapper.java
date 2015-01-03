@@ -51,6 +51,12 @@ public class RedditApiWrapper {
         return false;
     }
 
+    public static void setSubredditDefaults() {
+        Globals.CURRENT_SUBREDDIT = Globals.DEFAULT_SUBREDDIT;
+        Globals.CURRENT_SORT = Globals.DEFAULT_SORT;
+        Globals.CURRENT_TIME = null;
+    }
+
     public static ArrayList<Post> getPosts(URL url) {
         ArrayList<Post> posts = null;
 

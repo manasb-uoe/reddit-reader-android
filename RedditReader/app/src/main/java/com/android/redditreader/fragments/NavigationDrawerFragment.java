@@ -37,6 +37,7 @@ public class NavigationDrawerFragment extends Fragment {
     private RecyclerView subredditsRecyclerView;
     private ProgressBar subredditsProgressBar;
     private NavigationDrawerSubredditsAdapter navigationDrawerSubredditsAdapter;
+    Resources res;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -56,6 +57,8 @@ public class NavigationDrawerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mainActivity = (MainActivity) getActivity();
+
+        res = mainActivity.getResources();
 
         // set up subreddits recycler view
         navigationDrawerSubredditsAdapter = new NavigationDrawerSubredditsAdapter(new ArrayList<Subreddit>());
@@ -112,7 +115,7 @@ public class NavigationDrawerFragment extends Fragment {
                 SubredditViewHolder subredditViewHolder = (SubredditViewHolder) holder;
                 subredditViewHolder.subreddit.setText(subreddits.get(position - 1).getName());
 
-                Resources res = mainActivity.getResources();
+
                 if (position == currentPos) {
                     subredditViewHolder.subreddit.setTextColor(res.getColor(R.color.accent));
                     subredditViewHolder.subreddit.setBackgroundColor(res.getColor(R.color.navigation_drawer_selected_item_background));
@@ -163,6 +166,7 @@ public class NavigationDrawerFragment extends Fragment {
                 subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
 
                 addAccountContainer.setOnClickListener(this);
+                accountInfoContainer.setOnClickListener(this);
 
                 refreshNavigationDrawerHeader();
             }
@@ -172,6 +176,9 @@ public class NavigationDrawerFragment extends Fragment {
                 switch (v.getId()) {
                     case R.id.add_account_container:
                         showAddAccountDialog();
+                        break;
+                    case R.id.account_info_container:
+                        showExistingAccountsDialog();
                         break;
                 }
             }
@@ -218,6 +225,77 @@ public class NavigationDrawerFragment extends Fragment {
                 });
             }
 
+            private void showExistingAccountsDialog() {
+                final String[] existingAccounts = Helpers.getExistingAccounts(mainActivity);
+
+                if (existingAccounts != null) {
+                    final int addAccountItemIndex = existingAccounts.length - 1;
+                    existingAccounts[addAccountItemIndex] = "Add Account";
+
+                    // set default selection index to 'Add Account' item
+                    int selectionIndex = addAccountItemIndex;
+
+                    // get index of account with which the user is currently logged in
+                    if (Globals.SESSION_COOKIE != null) {
+                        String currentUsername = Helpers.readFromPreferences(mainActivity, Globals.GLOBAL_PREFS,
+                                Globals.GLOBAL_PREFS_LAST_USERNAME_KEY);
+                        for (int i=0; i<existingAccounts.length; i++) {
+                            if (existingAccounts[i].equals(currentUsername)) {
+                                selectionIndex = i;
+                            }
+                        }
+                    }
+
+                    AlertDialog existingAccountsDialog = new AlertDialog.Builder(mainActivity)
+                            .setSingleChoiceItems(existingAccounts, selectionIndex, null)
+                            .setPositiveButton(R.string.choose_account_dialog_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+
+                                    int selectionIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                    if (selectionIndex == addAccountItemIndex) {
+                                        showAddAccountDialog();
+                                    }
+                                    else {
+                                        // update last username in global preferences
+                                        String selectedUsername = existingAccounts[selectionIndex];
+                                        Helpers.writeToPreferences(mainActivity, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY, selectedUsername);
+
+                                        // update global SESSION_COOKIE
+                                        Globals.SESSION_COOKIE = Helpers.readFromPreferences(
+                                                mainActivity,
+                                                Helpers.getUserPreferencesFileName(selectedUsername),
+                                                Globals.USER_PREFS_SESSION_COOKIE_KEY);
+
+                                        RedditApiWrapper.setSubredditDefaults();
+                                        mainActivity.updateActionBarText();
+                                        refreshSubreddits();
+
+                                        mainActivity.postsListFragment.refreshPosts();
+
+                                        refreshNavigationDrawerHeader();
+
+                                        Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + selectedUsername, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton(R.string.choose_account_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setTitle(R.string.choose_account_dialog_title)
+                            .create();
+
+                    existingAccountsDialog.show();
+                }
+                else {
+                    Toast.makeText(mainActivity, R.string.error_no_existing_accounts, Toast.LENGTH_SHORT).show();
+                }
+            }
+
             private class AddAccountTask extends AsyncTask<Void, Void, Boolean> {
 
                 private final String TAG = AddAccountTask.class.getSimpleName();
@@ -239,7 +317,7 @@ public class NavigationDrawerFragment extends Fragment {
 
                     progressDialog = new ProgressDialog(mainActivity);
                     progressDialog.setIndeterminate(true);
-                    progressDialog.setMessage("Adding account...");
+                    progressDialog.setMessage(res.getString(R.string.add_account_progress_dialog_message));
 
                     addAccountDialog.dismiss();
                     progressDialog.show();
@@ -257,8 +335,8 @@ public class NavigationDrawerFragment extends Fragment {
                     progressDialog.cancel();
 
                     if (success) {
-                        mainActivity.closeNavigationDrawer();
-
+                        RedditApiWrapper.setSubredditDefaults();
+                        mainActivity.updateActionBarText();
                         refreshSubreddits();
 
                         mainActivity.postsListFragment.refreshPosts();
@@ -271,11 +349,12 @@ public class NavigationDrawerFragment extends Fragment {
                         // update last username in global preferences
                         Helpers.writeToPreferences(mainActivity, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY, username);
 
-                        // TODO add user account to list of existing accounts
+                        // add user account to list of existing accounts
+                        Helpers.addAccountToExistingAccounts(mainActivity, username);
 
                         refreshNavigationDrawerHeader();
 
-                        Toast.makeText(mainActivity, R.string.success_login, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + username, Toast.LENGTH_LONG).show();
                     }
                     else {
                         addAccountDialog.show();
@@ -364,6 +443,7 @@ public class NavigationDrawerFragment extends Fragment {
             subredditsProgressBar.setVisibility(View.INVISIBLE);
             subredditsRecyclerView.setVisibility(View.VISIBLE);
 
+            mainActivity.closeNavigationDrawer();
         }
     }
 
