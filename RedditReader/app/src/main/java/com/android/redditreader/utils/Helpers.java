@@ -17,6 +17,9 @@ import com.android.redditreader.R;
 import com.android.redditreader.models.Subreddit;
 import com.manas.asyncimageloader.AsyncImageLoader;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -263,6 +266,51 @@ public class Helpers {
 
     public static String getUserPreferencesFileName(String username) {
         return username + "_prefs";
+    }
+
+    public static void addAccountToExistingAccounts(Context context, String username) {
+        String existingAccountsJson = readFromPreferences(context, Globals.GLOBAL_PREFS, Globals.GLOBAl_PREFS_EXISTING_ACCOUNTS);
+        JSONArray existingAccountsJsonArray = null;
+        if (existingAccountsJson == null) {
+            existingAccountsJsonArray = new JSONArray();
+        }
+        else {
+            try {
+                existingAccountsJsonArray = new JSONArray(existingAccountsJson);
+            }
+            catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+
+        if (existingAccountsJsonArray != null) {
+            // only add account if it does not already exist
+            if (!existingAccountsJsonArray.toString().contains("\"" + username + "\"")) {
+                existingAccountsJsonArray.put(username);
+            }
+
+            writeToPreferences(context, Globals.GLOBAL_PREFS, Globals.GLOBAl_PREFS_EXISTING_ACCOUNTS, existingAccountsJsonArray.toString());
+        }
+    }
+
+    public static String[] getExistingAccounts(Context context) {
+        String existingAccountsJson = readFromPreferences(context, Globals.GLOBAL_PREFS, Globals.GLOBAl_PREFS_EXISTING_ACCOUNTS);
+        String[] existingAccountsArray = null;
+        if (existingAccountsJson != null) {
+            try {
+                JSONArray existingAccountsJsonArray = new JSONArray(existingAccountsJson);
+                existingAccountsArray = new String[existingAccountsJsonArray.length() + 1];  // leave one extra slot for 'add account' item
+
+                for (int i=0; i<existingAccountsJsonArray.length(); i++) {
+                    existingAccountsArray[i] = existingAccountsJsonArray.getString(i);
+                }
+            }
+            catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+
+        return existingAccountsArray;
     }
 
 }

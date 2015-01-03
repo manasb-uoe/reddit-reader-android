@@ -14,6 +14,7 @@ public class Globals {
     // shared preferences file and key names
     public static final String GLOBAL_PREFS = "global_prefs";
     public static final String GLOBAL_PREFS_LAST_USERNAME_KEY = "last_username";
+    public static final String GLOBAl_PREFS_EXISTING_ACCOUNTS = "existing_accounts";
     public static final String USER_PREFS_SESSION_COOKIE_KEY = "session_key";
     public static final String USER_PREFS_USERNAME_KEY = "username";
 
