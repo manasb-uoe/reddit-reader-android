@@ -17,6 +17,9 @@ public class Globals {
     public static final String GLOBAl_PREFS_EXISTING_ACCOUNTS = "existing_accounts";
     public static final String USER_PREFS_SESSION_COOKIE_KEY = "session_key";
     public static final String USER_PREFS_USERNAME_KEY = "username";
+    public static final String USER_PREFS_LAST_SUBREDDIT = "last_subreddit";
+    public static final String USER_PREFS_LAST_SORT = "last_sort";
+    public static final String USER_PREFS_LAST_TIME = "last_time";
 
     public static final String DEFAULT_SUBREDDIT = "Front Page";
     public static final String DEFAULT_SORT = "Hot";

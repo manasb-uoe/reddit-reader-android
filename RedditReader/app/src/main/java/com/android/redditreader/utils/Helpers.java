@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class Helpers {
 
-    private static final  String TAG = Helpers.class.getSimpleName();
+    private static final String TAG = Helpers.class.getSimpleName();
 
     public static HttpURLConnection getConnection(URL url, String requestMethod) {
         HttpURLConnection urlConnection = null;
@@ -52,8 +52,7 @@ public class Helpers {
                 Log.e(TAG, "request property set");
             }
             urlConnection.connect();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -65,11 +64,9 @@ public class Helpers {
         try {
             osWriter = new OutputStreamWriter(conn.getOutputStream());
             osWriter.write(postData);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e(TAG, e.getMessage());
-        }
-        finally {
+        } finally {
             if (osWriter != null) {
                 try {
                     osWriter.close();
@@ -94,11 +91,9 @@ public class Helpers {
                 stringBuilder.append(line);
             }
             content = stringBuilder.toString();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e(TAG, e.getMessage());
-        }
-        finally {
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -119,8 +114,7 @@ public class Helpers {
 
         if (!Globals.CURRENT_SUBREDDIT.equals(Globals.DEFAULT_SUBREDDIT)) {
             base = base + "/r/" + Globals.CURRENT_SUBREDDIT + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
-        }
-        else {
+        } else {
             base = base + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
         }
 
@@ -131,8 +125,7 @@ public class Helpers {
 //            builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_LIMIT));
             builder = Globals.CURRENT_POSTS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_POSTS_AFTER) : builder;
             builtURL = new URL(builder.build().toString());
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             builtURL = null;
             Log.e(TAG, e.getMessage());
         }
@@ -149,8 +142,7 @@ public class Helpers {
             builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_SUBREDDITS_LIMIT));
             builder = Globals.CURRENT_SUBREDDITS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_SUBREDDITS_AFTER) : builder;
             builtURL = new URL(builder.build().toString());
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             builtURL = null;
             Log.e(TAG, e.getMessage());
         }
@@ -167,8 +159,7 @@ public class Helpers {
         List<ResolveInfo> infos = packageManager.queryIntentActivities(viewIntent, 0);
         if (infos.size() > 0) {
             context.startActivity(viewIntent);
-        }
-        else {
+        } else {
             Toast.makeText(context, R.string.error_intent_cannot_be_handled, Toast.LENGTH_LONG).show();
         }
     }
@@ -183,8 +174,7 @@ public class Helpers {
         List<ResolveInfo> infos = packageManager.queryIntentActivities(shareIntent, 0);
         if (infos.size() > 0) {
             context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.social_share_dialog_title)));
-        }
-        else {
+        } else {
             Toast.makeText(context, R.string.error_intent_cannot_be_handled, Toast.LENGTH_LONG).show();
         }
     }
@@ -208,16 +198,13 @@ public class Helpers {
                 subreddit.setName(line);
                 subreddits.add(subreddit);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     Log.e(TAG, e.getMessage());
                 }
             }
@@ -246,8 +233,7 @@ public class Helpers {
                     AsyncImageLoader.getInstance().displayImage(thumbnailImageView, thumbnailURL);
                     break;
             }
-        }
-        else {
+        } else {
             thumbnailImageView.setVisibility(View.GONE);
         }
     }
@@ -273,12 +259,10 @@ public class Helpers {
         JSONArray existingAccountsJsonArray = null;
         if (existingAccountsJson == null) {
             existingAccountsJsonArray = new JSONArray();
-        }
-        else {
+        } else {
             try {
                 existingAccountsJsonArray = new JSONArray(existingAccountsJson);
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
         }
@@ -301,16 +285,75 @@ public class Helpers {
                 JSONArray existingAccountsJsonArray = new JSONArray(existingAccountsJson);
                 existingAccountsArray = new String[existingAccountsJsonArray.length() + 1];  // leave one extra slot for 'add account' item
 
-                for (int i=0; i<existingAccountsJsonArray.length(); i++) {
+                for (int i = 0; i < existingAccountsJsonArray.length(); i++) {
                     existingAccountsArray[i] = existingAccountsJsonArray.getString(i);
                 }
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
         }
 
         return existingAccountsArray;
+    }
+
+    public static String getCurrentUsername(Context context) {
+        String currentUsername = null;
+        if (Globals.SESSION_COOKIE != null) {
+            currentUsername = Helpers.readFromPreferences(
+                    context,
+                    Globals.GLOBAL_PREFS,
+                    Globals.GLOBAL_PREFS_LAST_USERNAME_KEY);
+        }
+
+        return currentUsername;
+    }
+
+    public static void saveSubredditInfoForCurrentUser(Context context) {
+        String currentUsername = getCurrentUsername(context);
+
+        if (currentUsername != null) {
+            writeToPreferences(
+                    context,
+                    currentUsername,
+                    Globals.USER_PREFS_LAST_SUBREDDIT,
+                    Globals.CURRENT_SUBREDDIT);
+
+            writeToPreferences(
+                    context,
+                    currentUsername,
+                    Globals.USER_PREFS_LAST_SORT,
+                    Globals.CURRENT_SORT);
+
+            writeToPreferences(
+                    context,
+                    currentUsername,
+                    Globals.USER_PREFS_LAST_TIME,
+                    Globals.CURRENT_TIME);
+        }
+    }
+
+    public static void setSubredditInfoForCurrentUser(Context context) {
+        String currentUsername = getCurrentUsername(context);
+
+        if (currentUsername != null) {
+            String lastSubreddit = readFromPreferences(
+                    context,
+                    currentUsername,
+                    Globals.USER_PREFS_LAST_SUBREDDIT);
+            Globals.CURRENT_SUBREDDIT = lastSubreddit != null ? lastSubreddit : Globals.DEFAULT_SUBREDDIT;
+
+            String lastSort = readFromPreferences(
+                    context,
+                    currentUsername,
+                    Globals.USER_PREFS_LAST_SORT);
+            Globals.CURRENT_SORT = lastSort != null ? lastSort : Globals.DEFAULT_SORT;
+
+            String lastTime = readFromPreferences(
+                    context,
+                    currentUsername,
+                    Globals.USER_PREFS_LAST_TIME);
+            Globals.CURRENT_TIME = lastTime != null ? lastTime : null;
+        }
     }
 
 }

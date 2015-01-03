@@ -248,9 +248,8 @@ public class NavigationDrawerFragment extends Fragment {
                     int selectionIndex = addAccountItemIndex;
 
                     // get index of account with which the user is currently logged in
-                    if (Globals.SESSION_COOKIE != null) {
-                        String currentUsername = Helpers.readFromPreferences(mainActivity, Globals.GLOBAL_PREFS,
-                                Globals.GLOBAL_PREFS_LAST_USERNAME_KEY);
+                    String currentUsername = Helpers.getCurrentUsername(mainActivity);
+                    if (currentUsername != null) {
                         for (int i=0; i<existingAccounts.length; i++) {
                             if (existingAccounts[i].equals(currentUsername)) {
                                 selectionIndex = i;

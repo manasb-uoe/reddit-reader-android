@@ -12,6 +12,7 @@ import android.view.View;
 import com.android.redditreader.R;
 import com.android.redditreader.fragments.PostsListFragment;
 import com.android.redditreader.utils.Globals;
+import com.android.redditreader.utils.Helpers;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -119,5 +120,13 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // save currently selected subreddit info in current user's preferences
+        Helpers.saveSubredditInfoForCurrentUser(this);
     }
 }
