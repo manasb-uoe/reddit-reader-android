@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,47 +106,6 @@ public class Helpers {
         }
 
         return content;
-    }
-
-    public static URL getCurrentSubredditURL() {
-        String base = Globals.BASE_API_URL;
-
-        if (!Globals.CURRENT_SUBREDDIT.equals(Globals.DEFAULT_SUBREDDIT)) {
-            base = base + "/r/" + Globals.CURRENT_SUBREDDIT + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
-        } else {
-            base = base + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
-        }
-
-        URL builtURL;
-        try {
-            Uri.Builder builder = Uri.parse(base).buildUpon();
-            builder = Globals.CURRENT_TIME != null ? builder.appendQueryParameter("t", Globals.CURRENT_TIME.toLowerCase()) : builder;
-//            builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_LIMIT));
-            builder = Globals.CURRENT_POSTS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_POSTS_AFTER) : builder;
-            builtURL = new URL(builder.build().toString());
-        } catch (MalformedURLException e) {
-            builtURL = null;
-            Log.e(TAG, e.getMessage());
-        }
-
-        return builtURL;
-    }
-
-    public static URL getUserSubredditsURL() {
-        String base = Globals.BASE_API_URL + "/reddits/mine.json";
-
-        URL builtURL;
-        try {
-            Uri.Builder builder = Uri.parse(base).buildUpon();
-            builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_SUBREDDITS_LIMIT));
-            builder = Globals.CURRENT_SUBREDDITS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_SUBREDDITS_AFTER) : builder;
-            builtURL = new URL(builder.build().toString());
-        } catch (MalformedURLException e) {
-            builtURL = null;
-            Log.e(TAG, e.getMessage());
-        }
-
-        return builtURL;
     }
 
     public static void viewURLInBrowser(Context context, String urlToView) {

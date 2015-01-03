@@ -1,6 +1,7 @@
 package com.android.redditreader.utils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.android.redditreader.models.Post;
@@ -21,6 +22,47 @@ import java.util.ArrayList;
 public class RedditApiWrapper {
 
     private static final String TAG = RedditApiWrapper.class.getSimpleName();
+
+    public static URL getCurrentSubredditURL() {
+        String base = Globals.BASE_API_URL;
+
+        if (!Globals.CURRENT_SUBREDDIT.equals(Globals.DEFAULT_SUBREDDIT)) {
+            base = base + "/r/" + Globals.CURRENT_SUBREDDIT + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
+        } else {
+            base = base + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
+        }
+
+        URL builtURL;
+        try {
+            Uri.Builder builder = Uri.parse(base).buildUpon();
+            builder = Globals.CURRENT_TIME != null ? builder.appendQueryParameter("t", Globals.CURRENT_TIME.toLowerCase()) : builder;
+//            builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_LIMIT));
+            builder = Globals.CURRENT_POSTS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_POSTS_AFTER) : builder;
+            builtURL = new URL(builder.build().toString());
+        } catch (MalformedURLException e) {
+            builtURL = null;
+            Log.e(TAG, e.getMessage());
+        }
+
+        return builtURL;
+    }
+
+    public static URL getUserSubredditsURL() {
+        String base = Globals.BASE_API_URL + "/reddits/mine.json";
+
+        URL builtURL;
+        try {
+            Uri.Builder builder = Uri.parse(base).buildUpon();
+            builder = builder.appendQueryParameter("limit", String.valueOf(Globals.DEFAULT_SUBREDDITS_LIMIT));
+            builder = Globals.CURRENT_SUBREDDITS_AFTER != null ? builder.appendQueryParameter("after", Globals.CURRENT_SUBREDDITS_AFTER) : builder;
+            builtURL = new URL(builder.build().toString());
+        } catch (MalformedURLException e) {
+            builtURL = null;
+            Log.e(TAG, e.getMessage());
+        }
+
+        return builtURL;
+    }
 
     public static boolean login(String username, String password) {
         HttpURLConnection conn = null;
@@ -108,10 +150,10 @@ public class RedditApiWrapper {
         ArrayList<Subreddit> subreddits = new ArrayList<>();
 
         if (Globals.SESSION_COOKIE != null) {
-            String content = Helpers.readStringFromConnection(Helpers.getConnection(Helpers.getUserSubredditsURL(), "GET"));
+            String content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET"));
             subreddits = parseSubreddits(content, subreddits);
             while (Globals.CURRENT_SUBREDDITS_AFTER != null) {
-                content = Helpers.readStringFromConnection(Helpers.getConnection(Helpers.getUserSubredditsURL(), "GET"));
+                content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET"));
                 subreddits = parseSubreddits(content, subreddits);
             }
         }
@@ -160,4 +202,5 @@ public class RedditApiWrapper {
 
         return subreddits;
     }
+
 }

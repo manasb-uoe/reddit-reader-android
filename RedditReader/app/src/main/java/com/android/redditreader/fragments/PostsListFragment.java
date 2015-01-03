@@ -14,7 +14,7 @@ import com.android.redditreader.R;
 import com.android.redditreader.adapters.PostsAdapter;
 import com.android.redditreader.background_tasks.GetPostsTask;
 import com.android.redditreader.models.Post;
-import com.android.redditreader.utils.Helpers;
+import com.android.redditreader.utils.RedditApiWrapper;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class PostsListFragment extends Fragment {
     }
 
     public void refreshPosts() {
-        new GetPostsTask(Helpers.getCurrentSubredditURL(), postsAdapter, postsRecyclerView, postsProgressBar).execute();
+        new GetPostsTask(RedditApiWrapper.getCurrentSubredditURL(), postsAdapter, postsRecyclerView, postsProgressBar).execute();
         postsRecyclerView.scrollToPosition(0);
     }
 
