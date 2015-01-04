@@ -69,7 +69,7 @@ public class RedditApiWrapper {
         HttpURLConnection conn = null;
 
         try {
-            conn = Helpers.getConnection(new URL(Globals.API_LOGIN_URL), "POST");
+            conn = Helpers.getConnection(new URL(Globals.API_LOGIN_URL), "POST", false);
             String postData = "user=" + username + "&passwd=" + password + "&rem=True";
             Helpers.writeToConnection(conn, postData);
             String cookie = conn.getHeaderField("set-cookie");
@@ -103,7 +103,7 @@ public class RedditApiWrapper {
     public static ArrayList<Post> getPosts(URL url) {
         ArrayList<Post> posts = null;
 
-        String content = Helpers.readStringFromConnection(Helpers.getConnection(url, "GET"));
+        String content = Helpers.readStringFromConnection(Helpers.getConnection(url, "GET", true));
 
         if (content != null) {
             try {
@@ -154,10 +154,10 @@ public class RedditApiWrapper {
         ArrayList<Subreddit> subreddits = new ArrayList<>();
 
         if (Globals.SESSION_COOKIE != null) {
-            String content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET"));
+            String content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET", true));
             subreddits = parseSubreddits(content, subreddits);
             while (Globals.CURRENT_SUBREDDITS_AFTER != null) {
-                content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET"));
+                content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET", true));
                 subreddits = parseSubreddits(content, subreddits);
             }
         }
@@ -213,7 +213,7 @@ public class RedditApiWrapper {
         try {
             URL voteURL = new URL(Globals.API_VOTE_URL);
 
-            conn = Helpers.getConnection(voteURL, "POST");
+            conn = Helpers.getConnection(voteURL, "POST", true);
 
             String postData = "dir=" + voteDirection + "&id=" + id + "&uh=" + Globals.MODHASH;
             Helpers.writeToConnection(conn, postData);

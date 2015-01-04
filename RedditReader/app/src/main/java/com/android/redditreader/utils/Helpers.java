@@ -37,7 +37,7 @@ public class Helpers {
 
     private static final String TAG = Helpers.class.getSimpleName();
 
-    public static HttpURLConnection getConnection(URL url, String requestMethod) {
+    public static HttpURLConnection getConnection(URL url, String requestMethod, boolean includeSessionCookie) {
         HttpURLConnection urlConnection = null;
 
         try {
@@ -47,7 +47,7 @@ public class Helpers {
             if (requestMethod.equals("POST")) {
                 urlConnection.setDoOutput(true);
             }
-            if (Globals.SESSION_COOKIE != null) {
+            if (Globals.SESSION_COOKIE != null && includeSessionCookie) {
                 urlConnection.setRequestProperty("Cookie", Globals.SESSION_COOKIE);
             }
             urlConnection.connect();
