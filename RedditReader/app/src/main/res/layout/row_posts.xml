@@ -103,42 +103,46 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="right">
 
-                <ImageButton
-                    android:id="@+id/upvote_button"
+                <ImageView
+                    android:id="@+id/upvote_imageview"
                     android:layout_width="@dimen/card_icon_width_height"
                     android:layout_height="@dimen/card_icon_width_height"
                     android:padding="@dimen/card_icon_padding"
                     android:scaleType="centerInside"
+                    android:clickable="true"
                     android:src="@drawable/ic_action_arrow_top"
                     android:background="?android:actionBarItemBackground"/>
 
-                <ImageButton
-                    android:id="@+id/downvote_button"
+                <ImageView
+                    android:id="@+id/downvote_imageview"
                     android:layout_width="@dimen/card_icon_width_height"
                     android:layout_height="@dimen/card_icon_width_height"
                     android:padding="@dimen/card_icon_padding"
                     android:layout_marginLeft="@dimen/card_icon_gap_width"
                     android:scaleType="centerInside"
+                    android:clickable="true"
                     android:src="@drawable/ic_action_arrow_bottom"
                     android:background="?android:actionBarItemBackground"/>
 
-                <ImageButton
-                    android:id="@+id/social_share_button"
+                <ImageView
+                    android:id="@+id/social_share_imageview"
                     android:layout_width="@dimen/card_icon_width_height"
                     android:layout_height="@dimen/card_icon_width_height"
                     android:padding="@dimen/card_icon_padding"
                     android:layout_marginLeft="@dimen/card_icon_gap_width"
                     android:scaleType="centerInside"
+                    android:clickable="true"
                     android:src="@drawable/ic_action_social_share"
                     android:background="?android:actionBarItemBackground"/>
 
-                <ImageButton
-                    android:id="@+id/more_options_button"
+                <ImageView
+                    android:id="@+id/more_options_imageview"
                     android:layout_width="@dimen/card_icon_width_height"
                     android:layout_height="@dimen/card_icon_width_height"
                     android:padding="@dimen/card_icon_padding"
                     android:layout_marginLeft="@dimen/card_icon_gap_width"
                     android:scaleType="centerInside"
+                    android:clickable="true"
                     android:src="@drawable/ic_action_overflow"
                     android:background="?android:actionBarItemBackground"/>
 
