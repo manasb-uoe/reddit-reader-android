@@ -5,6 +5,8 @@ package com.android.redditreader.utils;
  */
 public class Globals {
 
+    public static final String USER_AGENT = "RedditReader by enthusiast_94";
+
     // urls
     public static final String API_BASE_URL = "http://www.reddit.com";
     public static final String API_LOGIN_URL = API_BASE_URL + "/api/login";

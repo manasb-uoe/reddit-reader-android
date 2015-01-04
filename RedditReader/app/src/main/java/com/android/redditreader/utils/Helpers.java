@@ -43,12 +43,12 @@ public class Helpers {
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod(requestMethod);
+            urlConnection.setRequestProperty("User-Agent", Globals.USER_AGENT);
             if (requestMethod.equals("POST")) {
                 urlConnection.setDoOutput(true);
             }
             if (Globals.SESSION_COOKIE != null) {
                 urlConnection.setRequestProperty("Cookie", Globals.SESSION_COOKIE);
-                Log.e(TAG, "request property set");
             }
             urlConnection.connect();
         } catch (IOException e) {
