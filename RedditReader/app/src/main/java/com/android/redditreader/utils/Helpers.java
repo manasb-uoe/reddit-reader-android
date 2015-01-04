@@ -171,24 +171,29 @@ public class Helpers {
         return subreddits;
     }
 
-    public static void displayThumbnail(String thumbnailURL, ImageView thumbnailImageView) {
+    public static void displayPostThumbnail(String thumbnailURL, ImageView thumbnailImageView) {
         if (thumbnailURL.length() > 0) {
             thumbnailImageView.setVisibility(View.VISIBLE);
 
             switch (thumbnailURL) {
                 case "self":
                     thumbnailImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, Globals.THUMBNAIL_SELF);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, String.valueOf(R.drawable.thumbnail_self), true);
                     break;
 
                 case "nsfw":
                     thumbnailImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, Globals.THUMBNAIL_NSFW);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, String.valueOf(R.drawable.thumbnail_nsfw), true);
+                    break;
+
+                case "default":
+                    thumbnailImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, String.valueOf(R.drawable.thumbnail_default), true);
                     break;
 
                 default:
                     thumbnailImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, thumbnailURL);
+                    AsyncImageLoader.getInstance().displayImage(thumbnailImageView, thumbnailURL, false);
                     break;
             }
         } else {
