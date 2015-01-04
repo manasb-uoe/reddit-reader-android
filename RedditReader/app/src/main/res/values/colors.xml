@@ -11,4 +11,6 @@
     <color name="divider_light">#1F000000</color>
     <color name="edittext_line_light">#1F000000</color>
     <color name="navigation_drawer_selected_item_background">#E4E4E4</color>
+    <color name="upvote_reddit">#ff8b60</color>
+    <color name="downvote_reddit">#9494ff</color>
 </resources>

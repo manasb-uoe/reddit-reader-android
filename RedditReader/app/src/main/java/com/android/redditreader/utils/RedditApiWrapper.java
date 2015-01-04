@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,7 +25,7 @@ public class RedditApiWrapper {
     private static final String TAG = RedditApiWrapper.class.getSimpleName();
 
     public static URL getCurrentSubredditURL() {
-        String base = Globals.BASE_API_URL;
+        String base = Globals.API_BASE_URL;
 
         if (!Globals.CURRENT_SUBREDDIT.equals(Globals.DEFAULT_SUBREDDIT)) {
             base = base + "/r/" + Globals.CURRENT_SUBREDDIT + "/" + Globals.CURRENT_SORT.toLowerCase() + "/.json";
@@ -48,7 +49,7 @@ public class RedditApiWrapper {
     }
 
     public static URL getUserSubredditsURL() {
-        String base = Globals.BASE_API_URL + "/reddits/mine.json";
+        String base = Globals.API_BASE_URL + "/reddits/mine.json";
 
         URL builtURL;
         try {
@@ -68,7 +69,7 @@ public class RedditApiWrapper {
         HttpURLConnection conn = null;
 
         try {
-            conn = Helpers.getConnection(new URL(Globals.REDDIT_LOGIN_URL), "POST");
+            conn = Helpers.getConnection(new URL(Globals.API_LOGIN_URL), "POST");
             String postData = "user=" + username + "&passwd=" + password + "&rem=True";
             Helpers.writeToConnection(conn, postData);
             String cookie = conn.getHeaderField("set-cookie");
@@ -115,13 +116,16 @@ public class RedditApiWrapper {
 //                TODO get after id
 //                Utility.POSTS_AFTER = (String) data.get("after");
 
-                //iterate through the array of posts
+                // update modhash
+                Globals.MODHASH = !data.isNull("modhash") ? data.getString("modhash") : null;
+
                 for (int i=0;i<children.length();i++) {
                     JSONObject post_num = (JSONObject) children.get(i);
                     JSONObject data2 = (JSONObject) post_num.get("data");
 
-                    //get the required post data
                     Post post = new Post();
+                    post.setFullName(data2.getString("name"));
+                    post.setLiked(!data2.isNull("likes") ? data2.getBoolean("likes") : null);
                     post.setDomain(data2.get("domain").toString());
                     post.setSubreddit(data2.get("subreddit").toString());
                     post.setAuthor(data2.get("author").toString());
@@ -201,6 +205,33 @@ public class RedditApiWrapper {
         }
 
         return subreddits;
+    }
+
+    public static boolean vote(String id, int voteDirection) {
+        HttpURLConnection conn = null;
+
+        try {
+            URL voteURL = new URL(Globals.API_VOTE_URL);
+
+            conn = Helpers.getConnection(voteURL, "POST");
+
+            String postData = "dir=" + voteDirection + "&id=" + id + "&uh=" + Globals.MODHASH;
+            Helpers.writeToConnection(conn, postData);
+
+            if (conn.getResponseCode() == 200) {
+                return true;
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        return false;
     }
 
 }

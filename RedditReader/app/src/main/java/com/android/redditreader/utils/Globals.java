@@ -6,10 +6,9 @@ package com.android.redditreader.utils;
 public class Globals {
 
     // urls
-    public static final String BASE_API_URL = "http://www.reddit.com";
-    public static final String REDDIT_LOGIN_URL = "https://ssl.reddit.com/api/login";
-    public static final String THUMBNAIL_SELF = "http://i.imgur.com/7TqyJpu.png";
-    public static final String THUMBNAIL_NSFW = "http://i.imgur.com/9YCjKOr.png";
+    public static final String API_BASE_URL = "http://www.reddit.com";
+    public static final String API_LOGIN_URL = API_BASE_URL + "/api/login";
+    public static final String API_VOTE_URL = API_BASE_URL + "/api/vote";
 
     // shared preferences file and key names
     public static final String GLOBAL_PREFS = "global_prefs";
@@ -32,6 +31,7 @@ public class Globals {
     public static String CURRENT_SUBREDDITS_AFTER = null;
 
     public static String SESSION_COOKIE = null;
+    public static String MODHASH = null;  // A modhash is a token that the reddit API requires to help prevent CSRF
 
 
 }
