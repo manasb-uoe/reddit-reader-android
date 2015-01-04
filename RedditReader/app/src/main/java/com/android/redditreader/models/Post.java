@@ -4,10 +4,11 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Manas on 29-12-2014.
- */
+* Created by Manas on 29-12-2014.
+*/
 public class Post {
 
+    private String fullName;
     private String domain;
     private String subreddit;
     private String author;
@@ -20,9 +21,18 @@ public class Post {
     private int num_comments;
     private String permalink;
     private String selftext;
+    private Boolean isLiked;
 
     public Post() {
         // empty constructor
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getDomain() {
@@ -143,6 +153,14 @@ public class Post {
 
     public void setSelftext(String selftext) {
         this.selftext = selftext;
+    }
+
+    public Boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean isLiked) {
+        this.isLiked = isLiked;
     }
 }
 
