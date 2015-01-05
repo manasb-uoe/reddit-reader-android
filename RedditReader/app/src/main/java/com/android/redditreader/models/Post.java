@@ -22,6 +22,7 @@ public class Post {
     private String permalink;
     private String selftext;
     private Boolean isLiked;
+    private boolean isVisited;
 
     public Post() {
         // empty constructor
@@ -161,6 +162,14 @@ public class Post {
 
     public void setLiked(Boolean isLiked) {
         this.isLiked = isLiked;
+    }
+
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setVisited(boolean isVisited) {
+        this.isVisited = isVisited;
     }
 }
 

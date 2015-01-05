@@ -53,6 +53,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         holder.infoTextView.setText(post.getAuthor() + " • " + post.getCreated() + " • " +  post.getSubreddit() + " • " + post.getDomain());
         Helpers.displayPostThumbnail(post.getThumbnail(), holder.thumbnailImageView);
 
+        if (post.isVisited()) {
+            holder.titleTextView.setTextColor(res.getColor(R.color.visited_text));
+            holder.infoTextView.setTextColor(res.getColor(R.color.visited_text));
+        }
+        else {
+            holder.titleTextView.setTextColor(res.getColor(R.color.text_primary));
+            holder.infoTextView.setTextColor(res.getColor(R.color.text_secondary));
+        }
+
         if (post.isLiked() == null) {
             AsyncImageLoader.getInstance().displayImage(holder.upvoteImageView, String.valueOf(R.drawable.ic_action_arrow_top), true);
             AsyncImageLoader.getInstance().displayImage(holder.downvoteImageView, String.valueOf(R.drawable.ic_action_arrow_bottom), true);
@@ -77,6 +86,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
 
     class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private View postContainer;
         private TextView titleTextView;
         private TextView infoTextView;
         private TextView scoreTextView;
@@ -89,6 +99,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
 
         public PostViewHolder(View itemView) {
             super(itemView);
+
+            postContainer = itemView.findViewById(R.id.post_container);
             titleTextView = (TextView) itemView.findViewById(R.id.title_textview);
             infoTextView = (TextView) itemView.findViewById(R.id.info_textview);
             scoreTextView = (TextView) itemView.findViewById(R.id.score_textview);
@@ -99,6 +111,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             socialShareImageView = (ImageView) itemView.findViewById(R.id.social_share_imageview);
             moreOptionsImageView = (ImageView) itemView.findViewById(R.id.more_options_imageview);
 
+            postContainer.setOnClickListener(this);
             socialShareImageView.setOnClickListener(this);
             moreOptionsImageView.setOnClickListener(this);
             upvoteImageView.setOnClickListener(this);
@@ -110,6 +123,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             final Post selectedPost = posts.get(getPosition());
 
             switch (v.getId()) {
+
+                case R.id.post_container:
+                    if (!selectedPost.isVisited()) {
+                        selectedPost.setVisited(true);
+
+                        titleTextView.setTextColor(res.getColor(R.color.visited_text));
+                        infoTextView.setTextColor(res.getColor(R.color.visited_text));
+                    }
+                    break;
 
                 case R.id.social_share_imageview:
                     AlertDialog shareDialog = new AlertDialog.Builder(context)
@@ -244,5 +266,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             scoreTextView.setText(score == 1 ? score + " point" : score + " points");
             scoreTextView.setTextColor(res.getColor(colorRes));
         }
+
     }
 }

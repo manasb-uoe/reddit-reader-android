@@ -13,4 +13,5 @@
     <color name="navigation_drawer_selected_item_background">#E4E4E4</color>
     <color name="upvote_reddit">#ff8b60</color>
     <color name="downvote_reddit">#9494ff</color>
+    <color name="visited_text">#59000000</color>
 </resources>
