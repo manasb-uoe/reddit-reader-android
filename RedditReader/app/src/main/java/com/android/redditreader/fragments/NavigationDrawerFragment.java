@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,9 +165,7 @@ public class NavigationDrawerFragment extends Fragment {
             private View addAccountContainer;
             private View accountInfoContainer;
             private TextView usernameTextView;
-            private View viewUserProfileContainer;
-            private View manageSubredditsContainer;
-            private View viewSettingsContainer;
+            private LinearLayout mainOptionsList;
             private TextView subredditsRecyclerViewHeadingTextView;
 
             public HeaderViewHolder(View itemView) {
@@ -172,10 +173,10 @@ public class NavigationDrawerFragment extends Fragment {
                 addAccountContainer = itemView.findViewById(R.id.add_account_container);
                 accountInfoContainer = itemView.findViewById(R.id.account_info_container);
                 usernameTextView = (TextView) accountInfoContainer.findViewById(R.id.username_textview);
-                viewUserProfileContainer = itemView.findViewById(R.id.view_user_profile_container);
-                manageSubredditsContainer = itemView.findViewById(R.id.manage_subreddits_container);
-                viewSettingsContainer = itemView.findViewById(R.id.view_setttings_container);
+                mainOptionsList = (LinearLayout) itemView.findViewById(R.id.main_options_list);
                 subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
+
+                setUpMainOptionsList();
 
                 addAccountContainer.setOnClickListener(this);
                 accountInfoContainer.setOnClickListener(this);
@@ -192,7 +193,70 @@ public class NavigationDrawerFragment extends Fragment {
                     case R.id.account_info_container:
                         showExistingAccountsDialog();
                         break;
+                    case R.id.main_option_container:
+                        if (Globals.SESSION_COOKIE != null) {
+                            switch (mainOptionsList.indexOfChild(v)) {
+                                case 0:
+                                    // Profile
+                                    break;
+                                case 1:
+                                    // User
+                                    break;
+                                case 2:
+                                    // Subreddut
+                                    break;
+                                case 3:
+                                    // Settings
+                                    break;
+                            }
+                        }
+                        else {
+                            switch (mainOptionsList.indexOfChild(v)) {
+                                case 0:
+                                    // User
+                                    break;
+                                case 1:
+                                    // Subreddut
+                                    break;
+                                case 2:
+                                    // Settings
+                                    break;
+                            }
+                        }
                 }
+            }
+
+            private void setUpMainOptionsList() {
+                String[] mainOptionsTitles;
+                TypedArray mainOptionsIcons;
+
+                LayoutInflater inflater = mainActivity.getLayoutInflater();
+
+                if (Globals.SESSION_COOKIE != null) {
+                    mainOptionsTitles = res.getStringArray(R.array.navigation_drawer_main_options_titles_authenticated);
+                    mainOptionsIcons = res.obtainTypedArray(R.array.navigation_drawer_main_options_icons_authenticated);
+                }
+                else {
+                    mainOptionsTitles = res.getStringArray(R.array.navigation_drawer_main_options_titles_anonymous);
+                    mainOptionsIcons = res.obtainTypedArray(R.array.navigation_drawer_main_options_icons_anonymous);
+                }
+
+                for (int i=0; i<mainOptionsTitles.length; i++) {
+                    mainOptionsList.addView(getMainOptionView(mainOptionsTitles[i], mainOptionsIcons.getResourceId(i, -1), inflater));
+                }
+            }
+
+            private View getMainOptionView(String title, int iconResId, LayoutInflater inflater) {
+                View mainOptionView = inflater.inflate(R.layout.row_navigation_drawer_main_options, mainOptionsList, false);
+                TextView titleTextView = (TextView) mainOptionView.findViewById(R.id.title_textview);
+                ImageView iconImageView = (ImageView) mainOptionView.findViewById(R.id.icon_imageview);
+
+                titleTextView.setText(title);
+                iconImageView.setImageResource(iconResId);
+
+                mainOptionView.setOnClickListener(this);
+
+                return mainOptionView;
             }
 
             private void showAddAccountDialog() {

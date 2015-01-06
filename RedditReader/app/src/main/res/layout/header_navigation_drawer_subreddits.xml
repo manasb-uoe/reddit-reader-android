@@ -84,93 +84,12 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/view_user_profile_container"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
+        android:id="@+id/main_options_list"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_drawer_list_item_height"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
-        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="@dimen/navigation_drawer_list_item_icon_width"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_action_social_person"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/navigation_drawer_action_profile"
-            android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
-            android:gravity="center_vertical"
-            android:textColor="#DE000000"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="14sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/manage_subreddits_container"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_drawer_list_item_height"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
-        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground">
-
-        <ImageView
-            android:layout_width="@dimen/navigation_drawer_list_item_icon_width"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_action_subreddit"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/navigation_drawer_action_subreddits"
-            android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
-            android:gravity="center_vertical"
-            android:textColor="#DE000000"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="14sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/view_setttings_container"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_drawer_list_item_height"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
-        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground">
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="@dimen/navigation_drawer_list_item_icon_width"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_action_settings"/>
-
-        <TextView
-            android:id="@+id/text_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/navigation_drawer_action_settings"
-            android:layout_marginLeft="@dimen/navigation_drawer_list_item_text_margin_left"
-            android:gravity="center_vertical"
-            android:textColor="@color/text_primary"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="14sp"/>
-
-    </LinearLayout>
+        </LinearLayout>
 
     <View
         android:layout_width="match_parent"
