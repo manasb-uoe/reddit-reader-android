@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.android.redditreader.R;
 import com.android.redditreader.activities.MainActivity;
+import com.android.redditreader.background_tasks.GetSubredditsTask;
 import com.android.redditreader.models.Subreddit;
 import com.android.redditreader.utils.Globals;
 import com.android.redditreader.utils.Helpers;
@@ -68,12 +69,40 @@ public class NavigationDrawerFragment extends Fragment {
         subredditsRecyclerView.setAdapter(navigationDrawerSubredditsAdapter);
         subredditsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new GetSubredditsTask().execute();
+        refreshSubreddits();
     }
 
     private void findViews(View view) {
         subredditsRecyclerView = (RecyclerView) view.findViewById(R.id.subreddits_recycler_view);
         subredditsProgressBar = (ProgressBar) view.findViewById(R.id.subreddits_progressbar);
+    }
+
+    private void refreshSubreddits() {
+        new GetSubredditsTask(
+                mainActivity,
+                new GetSubredditsTask.PreExecuteCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        subredditsProgressBar.setVisibility(View.VISIBLE);
+                        subredditsRecyclerView.setVisibility(View.INVISIBLE);
+                    }
+                },
+                new GetSubredditsTask.PostExecuteCallback() {
+                    @Override
+                    public void onPostExecute(ArrayList<Subreddit> subreddits) {
+                        navigationDrawerSubredditsAdapter.subreddits.clear();
+                        navigationDrawerSubredditsAdapter.subreddits.addAll(subreddits);
+                        navigationDrawerSubredditsAdapter.subreddits.trimToSize();
+                        navigationDrawerSubredditsAdapter.resetSelectionIndex();
+                        navigationDrawerSubredditsAdapter.notifyDataSetChanged();
+
+                        subredditsProgressBar.setVisibility(View.INVISIBLE);
+                        subredditsRecyclerView.setVisibility(View.VISIBLE);
+
+                        mainActivity.closeNavigationDrawer();
+                    }
+                })
+                .execute();
     }
 
     private class NavigationDrawerSubredditsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -419,7 +448,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             private void refreshNavigationDrawerAndPosts() {
                 RedditApiWrapper.setSubredditDefaults();
-                new GetSubredditsTask().execute();
+                refreshSubreddits();
 
                 mainActivity.postsListFragment.refreshPosts();
 
@@ -530,38 +559,6 @@ public class NavigationDrawerFragment extends Fragment {
                 mainActivity.postsListFragment.refreshPosts();
                 mainActivity.updateActionBarText();
             }
-        }
-    }
-
-    private class GetSubredditsTask extends AsyncTask<Void, Void, ArrayList<Subreddit>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            subredditsProgressBar.setVisibility(View.VISIBLE);
-            subredditsRecyclerView.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        protected ArrayList<Subreddit> doInBackground(Void... params) {
-            return RedditApiWrapper.getSubreddits(mainActivity);
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Subreddit> subreddits) {
-            super.onPostExecute(subreddits);
-
-            navigationDrawerSubredditsAdapter.subreddits.clear();
-            navigationDrawerSubredditsAdapter.subreddits.addAll(subreddits);
-            navigationDrawerSubredditsAdapter.subreddits.trimToSize();
-            navigationDrawerSubredditsAdapter.resetSelectionIndex();
-            navigationDrawerSubredditsAdapter.notifyDataSetChanged();
-
-            subredditsProgressBar.setVisibility(View.INVISIBLE);
-            subredditsRecyclerView.setVisibility(View.VISIBLE);
-
-            mainActivity.closeNavigationDrawer();
         }
     }
 }
