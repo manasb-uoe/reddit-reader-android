@@ -19,7 +19,6 @@
             android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
             android:paddingRight="@dimen/navigation_drawer_padding_left_right"
             android:paddingBottom="10dp"
-            android:visibility="invisible"
             android:gravity="bottom">
 
             <TextView
@@ -40,41 +39,6 @@
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_navigation_arrow_drop_down"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/add_account_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:actionBarItemBackground"
-            android:clickable="true"
-            android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
-            android:paddingRight="@dimen/navigation_drawer_padding_left_right"
-            android:paddingBottom="10dp"
-            android:gravity="bottom">
-
-            <TextView
-                android:id="@+id/add_account_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:text="@string/navigation_drawer_add_account"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:layout_alignBottom="@+id/add_account_imageview"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/add_account_imageview" />
-
-            <ImageView
-                android:id="@+id/add_account_imageview"
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_content_add"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"/>
@@ -103,7 +67,7 @@
         android:textSize="14sp"
         android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
         android:paddingRight="@dimen/navigation_drawer_padding_left_right"
-        android:text="@string/navigation_drawer_subheader_subreddits_default"
+        android:text="@string/navigation_drawer_subheader_subreddits_anonymous"
         android:gravity="center"
         android:textColor="@color/text_secondary"/>
 

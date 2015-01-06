@@ -100,8 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
             if (viewType == TYPE_HEADAER) {
                 itemView = layoutInflater.inflate(R.layout.header_navigation_drawer_subreddits, parent, false);
                 return new HeaderViewHolder(itemView);
-            }
-            else {
+            } else {
                 itemView = layoutInflater.inflate(R.layout.row_navigation_drawer_subreddits, parent, false);
                 return new SubredditViewHolder(itemView);
             }
@@ -117,13 +116,11 @@ public class NavigationDrawerFragment extends Fragment {
                 if (position == currentPos) {
                     subredditViewHolder.subreddit.setTextColor(res.getColor(R.color.accent));
                     subredditViewHolder.subreddit.setBackgroundColor(res.getColor(R.color.navigation_drawer_selected_item_background));
-                }
-                else {
+                } else {
                     subredditViewHolder.subreddit.setTextColor(res.getColor(R.color.text_primary));
                     subredditViewHolder.subreddit.setBackgroundColor(Color.TRANSPARENT);
                 }
-            }
-            else if (holder instanceof HeaderViewHolder) {
+            } else if (holder instanceof HeaderViewHolder) {
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
             }
         }
@@ -137,8 +134,7 @@ public class NavigationDrawerFragment extends Fragment {
         public int getItemViewType(int position) {
             if (position == 0) {
                 return TYPE_HEADAER;
-            }
-            else {
+            } else {
                 return TYPE_ITEM;
             }
         }
@@ -147,7 +143,7 @@ public class NavigationDrawerFragment extends Fragment {
          * Updates index of selected item based on the current subreddit
          */
         public void resetSelectionIndex() {
-            for (int i=0; i<subreddits.size(); i++) {
+            for (int i = 0; i < subreddits.size(); i++) {
                 if (subreddits.get(i).getName().equals(Globals.CURRENT_SUBREDDIT)) {
                     currentPos = i + 1;
                     oldPos = currentPos;
@@ -157,7 +153,6 @@ public class NavigationDrawerFragment extends Fragment {
 
         private class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-            private View addAccountContainer;
             private View accountInfoContainer;
             private TextView usernameTextView;
             private LinearLayout mainOptionsList;
@@ -165,13 +160,11 @@ public class NavigationDrawerFragment extends Fragment {
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
-                addAccountContainer = itemView.findViewById(R.id.add_account_container);
                 accountInfoContainer = itemView.findViewById(R.id.account_info_container);
                 usernameTextView = (TextView) accountInfoContainer.findViewById(R.id.username_textview);
                 mainOptionsList = (LinearLayout) itemView.findViewById(R.id.main_options_list);
                 subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
 
-                addAccountContainer.setOnClickListener(this);
                 accountInfoContainer.setOnClickListener(this);
 
                 refreshNavigationDrawerHeader();
@@ -181,11 +174,14 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.add_account_container:
-                        showAddAccountDialog();
-                        break;
                     case R.id.account_info_container:
-                        showExistingAccountsDialog();
+                        final String[] existingAccounts = Helpers.getExistingAccounts(mainActivity);
+                        if (existingAccounts.length > 1) {
+                            showExistingAccountsDialog(existingAccounts);
+                        }
+                        else {
+                            showAddAccountDialog();
+                        }
                         break;
                     case R.id.main_option_container:
                         if (Globals.SESSION_COOKIE != null) {
@@ -207,8 +203,7 @@ public class NavigationDrawerFragment extends Fragment {
                                     showLogoutConfirmationDialog();
                                     break;
                             }
-                        }
-                        else {
+                        } else {
                             switch (mainOptionsList.indexOfChild(v)) {
                                 case 0:
                                     // User
@@ -229,26 +224,14 @@ public class NavigationDrawerFragment extends Fragment {
              */
             private void refreshNavigationDrawerHeader() {
                 // first set up top add account/account info container
-                if (Helpers.getExistingAccounts(mainActivity).length > 0) {
-                    if (Globals.SESSION_COOKIE != null) {
-                        usernameTextView.setText(Helpers.getCurrentUsername(mainActivity));
+                if (Globals.SESSION_COOKIE != null) {
+                    usernameTextView.setText(Helpers.getCurrentUsername(mainActivity));
 
-                        subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
-                    }
-                    else {
-                        usernameTextView.setText(R.string.navigation_drawer_login);
+                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
+                } else {
+                    usernameTextView.setText(R.string.navigation_drawer_login);
 
-                        subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_default);
-                    }
-
-                    accountInfoContainer.setVisibility(View.VISIBLE);
-                    addAccountContainer.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_default);
-
-                    accountInfoContainer.setVisibility(View.INVISIBLE);
-                    addAccountContainer.setVisibility(View.VISIBLE);
+                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_anonymous);
                 }
 
                 // populate main options list
@@ -264,8 +247,7 @@ public class NavigationDrawerFragment extends Fragment {
                 if (Globals.SESSION_COOKIE != null) {
                     mainOptionsTitles = res.getStringArray(R.array.navigation_drawer_main_options_titles_authenticated);
                     mainOptionsIcons = res.obtainTypedArray(R.array.navigation_drawer_main_options_icons_authenticated);
-                }
-                else {
+                } else {
                     mainOptionsTitles = res.getStringArray(R.array.navigation_drawer_main_options_titles_anonymous);
                     mainOptionsIcons = res.obtainTypedArray(R.array.navigation_drawer_main_options_icons_anonymous);
                 }
@@ -273,7 +255,7 @@ public class NavigationDrawerFragment extends Fragment {
                 // remove all child views before populating main options list
                 mainOptionsList.removeAllViews();
 
-                for (int i=0; i<mainOptionsTitles.length; i++) {
+                for (int i = 0; i < mainOptionsTitles.length; i++) {
                     mainOptionsList.addView(getMainOptionView(mainOptionsTitles[i], mainOptionsIcons.getResourceId(i, -1), inflater));
                 }
             }
@@ -333,73 +315,64 @@ public class NavigationDrawerFragment extends Fragment {
                 });
             }
 
-            private void showExistingAccountsDialog() {
-                final String[] existingAccounts = Helpers.getExistingAccounts(mainActivity);
+            private void showExistingAccountsDialog(final String[] existingAccounts) {
+                final int addAccountItemIndex = existingAccounts.length - 1;
 
-                if (existingAccounts != null) {
-                    final int addAccountItemIndex = existingAccounts.length - 1;
-                    existingAccounts[addAccountItemIndex] = "Add Account";
+                // set default selection index to 'Add Account' item
+                int selectionIndex = addAccountItemIndex;
 
-                    // set default selection index to 'Add Account' item
-                    int selectionIndex = addAccountItemIndex;
-
-                    // get index of account with which the user is currently logged in
-                    String currentUsername = Helpers.getCurrentUsername(mainActivity);
-                    if (currentUsername != null) {
-                        for (int i=0; i<existingAccounts.length; i++) {
-                            if (existingAccounts[i].equals(currentUsername)) {
-                                selectionIndex = i;
-                            }
+                // get index of account with which the user is currently logged in
+                String currentUsername = Helpers.getCurrentUsername(mainActivity);
+                if (currentUsername != null) {
+                    for (int i = 0; i < existingAccounts.length; i++) {
+                        if (existingAccounts[i].equals(currentUsername)) {
+                            selectionIndex = i;
                         }
                     }
-
-                    AlertDialog existingAccountsDialog = new AlertDialog.Builder(mainActivity)
-                            .setSingleChoiceItems(existingAccounts, selectionIndex, null)
-                            .setPositiveButton(R.string.choose_account_dialog_positive, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-
-                                    int selectionIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                    if (selectionIndex == addAccountItemIndex) {
-                                        showAddAccountDialog();
-                                    }
-                                    else {
-                                        String selectedUsername = existingAccounts[selectionIndex];
-
-                                        // update last username in global preferences
-                                        Helpers.writeToPreferences(mainActivity,
-                                                Globals.GLOBAL_PREFS,
-                                                Globals.GLOBAL_PREFS_LAST_USERNAME_KEY,
-                                                selectedUsername);
-
-                                        // update global SESSION_COOKIE
-                                        Globals.SESSION_COOKIE = Helpers.readFromPreferences(
-                                                mainActivity,
-                                                Helpers.getUserPreferencesFileName(selectedUsername),
-                                                Globals.USER_PREFS_SESSION_COOKIE_KEY);
-
-                                        refreshNavigationDrawerAndPosts();
-
-                                        // show login success message
-                                        Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + selectedUsername, Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            })
-                            .setNegativeButton(R.string.choose_account_dialog_negative, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            })
-                            .setTitle(R.string.choose_account_dialog_title)
-                            .create();
-
-                    existingAccountsDialog.show();
                 }
-                else {
-                    Toast.makeText(mainActivity, R.string.error_no_existing_accounts, Toast.LENGTH_SHORT).show();
-                }
+
+                AlertDialog existingAccountsDialog = new AlertDialog.Builder(mainActivity)
+                        .setSingleChoiceItems(existingAccounts, selectionIndex, null)
+                        .setPositiveButton(R.string.choose_account_dialog_positive, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+
+                                int selectionIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                if (selectionIndex == addAccountItemIndex) {
+                                    showAddAccountDialog();
+                                } else {
+                                    String selectedUsername = existingAccounts[selectionIndex];
+
+                                    // update last username in global preferences
+                                    Helpers.writeToPreferences(mainActivity,
+                                            Globals.GLOBAL_PREFS,
+                                            Globals.GLOBAL_PREFS_LAST_USERNAME_KEY,
+                                            selectedUsername);
+
+                                    // update global SESSION_COOKIE
+                                    Globals.SESSION_COOKIE = Helpers.readFromPreferences(
+                                            mainActivity,
+                                            Helpers.getUserPreferencesFileName(selectedUsername),
+                                            Globals.USER_PREFS_SESSION_COOKIE_KEY);
+
+                                    refreshNavigationDrawerAndPosts();
+
+                                    // show login success message
+                                    Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + selectedUsername, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.choose_account_dialog_negative, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setTitle(R.string.choose_account_dialog_title)
+                        .create();
+
+                existingAccountsDialog.show();
             }
 
             private void showLogoutConfirmationDialog() {
@@ -500,13 +473,13 @@ public class NavigationDrawerFragment extends Fragment {
 
                         // show login success message
                         Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + username, Toast.LENGTH_LONG).show();
-                    }
-                    else {
+                    } else {
                         addAccountDialog.show();
                         Toast.makeText(mainActivity, R.string.error_username_or_password_incorrect, Toast.LENGTH_LONG).show();
                     }
                 }
             }
+
         }
 
         private class SubredditViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -570,5 +543,4 @@ public class NavigationDrawerFragment extends Fragment {
             mainActivity.closeNavigationDrawer();
         }
     }
-
 }

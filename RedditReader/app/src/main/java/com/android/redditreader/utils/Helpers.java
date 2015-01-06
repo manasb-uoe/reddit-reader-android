@@ -246,7 +246,8 @@ public class Helpers {
         if (existingAccountsJson != null) {
             try {
                 JSONArray existingAccountsJsonArray = new JSONArray(existingAccountsJson);
-                existingAccountsArray = new String[existingAccountsJsonArray.length() + 1];  // leave one extra slot for 'add account' item
+                existingAccountsArray = new String[existingAccountsJsonArray.length() + 1];  // leave one extra slot for 'Add Account' item
+                existingAccountsArray[existingAccountsArray.length - 1] = "Add Account";
 
                 for (int i = 0; i < existingAccountsJsonArray.length(); i++) {
                     existingAccountsArray[i] = existingAccountsJsonArray.getString(i);
@@ -254,6 +255,10 @@ public class Helpers {
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
+        }
+        else {
+            existingAccountsArray  = new String[1];
+            existingAccountsArray[0] = "Add Account";
         }
 
         return existingAccountsArray;
