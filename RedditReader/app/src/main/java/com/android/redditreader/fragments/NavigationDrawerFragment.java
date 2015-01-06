@@ -68,18 +68,13 @@ public class NavigationDrawerFragment extends Fragment {
         subredditsRecyclerView.setAdapter(navigationDrawerSubredditsAdapter);
         subredditsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        refreshSubreddits();
+        new GetSubredditsTask().execute();
     }
 
     private void findViews(View view) {
         subredditsRecyclerView = (RecyclerView) view.findViewById(R.id.subreddits_recycler_view);
         subredditsProgressBar = (ProgressBar) view.findViewById(R.id.subreddits_progressbar);
     }
-
-    private void refreshSubreddits() {
-        new GetSubredditsTask().execute();
-    }
-
 
     private class NavigationDrawerSubredditsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -176,12 +171,11 @@ public class NavigationDrawerFragment extends Fragment {
                 mainOptionsList = (LinearLayout) itemView.findViewById(R.id.main_options_list);
                 subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
 
-                setUpMainOptionsList();
-
                 addAccountContainer.setOnClickListener(this);
                 accountInfoContainer.setOnClickListener(this);
 
                 refreshNavigationDrawerHeader();
+
             }
 
             @Override
@@ -208,6 +202,10 @@ public class NavigationDrawerFragment extends Fragment {
                                 case 3:
                                     // Settings
                                     break;
+                                case 4:
+                                    // Log out
+                                    showLogoutConfirmationDialog();
+                                    break;
                             }
                         }
                         else {
@@ -226,6 +224,37 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             }
 
+            /**
+             * Should be invoked AFTER username has been written to GLOBAL shared preferences
+             */
+            private void refreshNavigationDrawerHeader() {
+                // first set up top add account/account info container
+                if (Helpers.getExistingAccounts(mainActivity).length > 0) {
+                    if (Globals.SESSION_COOKIE != null) {
+                        usernameTextView.setText(Helpers.getCurrentUsername(mainActivity));
+
+                        subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
+                    }
+                    else {
+                        usernameTextView.setText(R.string.navigation_drawer_login);
+
+                        subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_default);
+                    }
+
+                    accountInfoContainer.setVisibility(View.VISIBLE);
+                    addAccountContainer.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_default);
+
+                    accountInfoContainer.setVisibility(View.INVISIBLE);
+                    addAccountContainer.setVisibility(View.VISIBLE);
+                }
+
+                // populate main options list
+                setUpMainOptionsList();
+            }
+
             private void setUpMainOptionsList() {
                 String[] mainOptionsTitles;
                 TypedArray mainOptionsIcons;
@@ -240,6 +269,9 @@ public class NavigationDrawerFragment extends Fragment {
                     mainOptionsTitles = res.getStringArray(R.array.navigation_drawer_main_options_titles_anonymous);
                     mainOptionsIcons = res.obtainTypedArray(R.array.navigation_drawer_main_options_icons_anonymous);
                 }
+
+                // remove all child views before populating main options list
+                mainOptionsList.removeAllViews();
 
                 for (int i=0; i<mainOptionsTitles.length; i++) {
                     mainOptionsList.addView(getMainOptionView(mainOptionsTitles[i], mainOptionsIcons.getResourceId(i, -1), inflater));
@@ -333,9 +365,13 @@ public class NavigationDrawerFragment extends Fragment {
                                         showAddAccountDialog();
                                     }
                                     else {
-                                        // update last username in global preferences
                                         String selectedUsername = existingAccounts[selectionIndex];
-                                        Helpers.writeToPreferences(mainActivity, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY, selectedUsername);
+
+                                        // update last username in global preferences
+                                        Helpers.writeToPreferences(mainActivity,
+                                                Globals.GLOBAL_PREFS,
+                                                Globals.GLOBAL_PREFS_LAST_USERNAME_KEY,
+                                                selectedUsername);
 
                                         // update global SESSION_COOKIE
                                         Globals.SESSION_COOKIE = Helpers.readFromPreferences(
@@ -343,15 +379,9 @@ public class NavigationDrawerFragment extends Fragment {
                                                 Helpers.getUserPreferencesFileName(selectedUsername),
                                                 Globals.USER_PREFS_SESSION_COOKIE_KEY);
 
-                                        RedditApiWrapper.setSubredditDefaults();
-                                        refreshSubreddits();
+                                        refreshNavigationDrawerAndPosts();
 
-                                        mainActivity.postsListFragment.refreshPosts();
-
-                                        mainActivity.updateActionBarText();
-
-                                        refreshNavigationDrawerHeader();
-
+                                        // show login success message
                                         Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + selectedUsername, Toast.LENGTH_LONG).show();
                                     }
                                 }
@@ -370,6 +400,50 @@ public class NavigationDrawerFragment extends Fragment {
                 else {
                     Toast.makeText(mainActivity, R.string.error_no_existing_accounts, Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            private void showLogoutConfirmationDialog() {
+                AlertDialog logoutConfirmationDialog = new AlertDialog.Builder(mainActivity)
+                        .setTitle(R.string.logout_confirmation_dialog_title)
+                        .setMessage(R.string.logout_confirmation_dialog_message)
+                        .setPositiveButton(R.string.logout_confirmation_dialog_positive, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // remove last username from global preferences
+                                Helpers.writeToPreferences(
+                                        mainActivity,
+                                        Globals.GLOBAL_PREFS,
+                                        Globals.GLOBAL_PREFS_LAST_USERNAME_KEY,
+                                        null);
+
+                                // remove global SESSION_COOKIE
+                                Globals.SESSION_COOKIE = null;
+
+                                refreshNavigationDrawerAndPosts();
+
+                                // show logout success message
+                                Toast.makeText(mainActivity, R.string.success_logout, Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.logout_confirmation_dialog_negative, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create();
+                logoutConfirmationDialog.show();
+            }
+
+            private void refreshNavigationDrawerAndPosts() {
+                RedditApiWrapper.setSubredditDefaults();
+                new GetSubredditsTask().execute();
+
+                mainActivity.postsListFragment.refreshPosts();
+
+                mainActivity.updateActionBarText();
+
+                refreshNavigationDrawerHeader();
             }
 
             private class AddAccountTask extends AsyncTask<Void, Void, Boolean> {
@@ -411,14 +485,6 @@ public class NavigationDrawerFragment extends Fragment {
                     progressDialog.cancel();
 
                     if (success) {
-                        RedditApiWrapper.setSubredditDefaults();
-
-                        refreshSubreddits();
-
-                        mainActivity.postsListFragment.refreshPosts();
-
-                        mainActivity.updateActionBarText();
-
                         // save current user's session cookie and username in user preferences
                         String fileName = Helpers.getUserPreferencesFileName(username);
                         Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_USERNAME_KEY, username);
@@ -430,36 +496,15 @@ public class NavigationDrawerFragment extends Fragment {
                         // add user account to list of existing accounts
                         Helpers.addAccountToExistingAccounts(mainActivity, username);
 
-                        refreshNavigationDrawerHeader();
+                        refreshNavigationDrawerAndPosts();
 
+                        // show login success message
                         Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + username, Toast.LENGTH_LONG).show();
                     }
                     else {
                         addAccountDialog.show();
                         Toast.makeText(mainActivity, R.string.error_username_or_password_incorrect, Toast.LENGTH_LONG).show();
                     }
-                }
-            }
-
-            /**
-             * Should be invoked AFTER username has been written to GLOBAL shared preferences
-             */
-            private void refreshNavigationDrawerHeader() {
-                if (Globals.SESSION_COOKIE != null) {
-                    usernameTextView.setText(Helpers.readFromPreferences(mainActivity, Globals.GLOBAL_PREFS,
-                            Globals.GLOBAL_PREFS_LAST_USERNAME_KEY));
-
-                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_authenticated);
-
-                    accountInfoContainer.setVisibility(View.VISIBLE);
-                    addAccountContainer.setVisibility(View.INVISIBLE);
-
-                }
-                else {
-                    subredditsRecyclerViewHeadingTextView.setText(R.string.navigation_drawer_subheader_subreddits_default);
-
-                    accountInfoContainer.setVisibility(View.INVISIBLE);
-                    addAccountContainer.setVisibility(View.VISIBLE);
                 }
             }
         }

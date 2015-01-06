@@ -29,6 +29,7 @@
         <item>User</item>
         <item>Subreddit</item>
         <item>Settings</item>
+        <item>Log out</item>
     </string-array>
 
     <string-array name="navigation_drawer_main_options_icons_authenticated">
@@ -36,5 +37,6 @@
         <item>@drawable/ic_action_social_people</item>
         <item>@drawable/ic_action_subreddit</item>
         <item>@drawable/ic_action_settings</item>
+        <item>@drawable/ic_action_logout</item>
     </string-array>
 </resources>
