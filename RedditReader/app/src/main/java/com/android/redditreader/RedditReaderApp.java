@@ -12,7 +12,7 @@ import java.io.File;
 /**
  * Created by Manas on 30-12-2014.
  */
-public class App extends Application {
+public class RedditReaderApp extends Application {
 
     @Override
     public void onCreate() {
