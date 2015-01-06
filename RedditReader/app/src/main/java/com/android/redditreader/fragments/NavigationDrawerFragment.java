@@ -40,7 +40,7 @@ public class NavigationDrawerFragment extends Fragment {
     private RecyclerView subredditsRecyclerView;
     private ProgressBar subredditsProgressBar;
     private NavigationDrawerSubredditsAdapter navigationDrawerSubredditsAdapter;
-    Resources res;
+    private Resources res;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -98,10 +98,16 @@ public class NavigationDrawerFragment extends Fragment {
             LayoutInflater layoutInflater = LayoutInflater.from(mainActivity);
 
             if (viewType == TYPE_HEADAER) {
-                itemView = layoutInflater.inflate(R.layout.header_navigation_drawer_subreddits, parent, false);
+                itemView = layoutInflater.inflate(
+                        R.layout.header_navigation_drawer_subreddits,
+                        parent,
+                        false);
                 return new HeaderViewHolder(itemView);
             } else {
-                itemView = layoutInflater.inflate(R.layout.row_navigation_drawer_subreddits, parent, false);
+                itemView = layoutInflater.inflate(
+                        R.layout.row_navigation_drawer_subreddits,
+                        parent,
+                        false);
                 return new SubredditViewHolder(itemView);
             }
         }
@@ -111,7 +117,6 @@ public class NavigationDrawerFragment extends Fragment {
             if (holder instanceof SubredditViewHolder) {
                 SubredditViewHolder subredditViewHolder = (SubredditViewHolder) holder;
                 subredditViewHolder.subreddit.setText(subreddits.get(position - 1).getName());
-
 
                 if (position == currentPos) {
                     subredditViewHolder.subreddit.setTextColor(res.getColor(R.color.accent));
@@ -305,9 +310,11 @@ public class NavigationDrawerFragment extends Fragment {
 
                         // validate user input
                         if (username.length() == 0) {
-                            Toast.makeText(mainActivity, R.string.error_username_blank, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mainActivity, R.string.error_username_blank, Toast.LENGTH_SHORT)
+                                    .show();
                         } else if (password.length() == 0) {
-                            Toast.makeText(mainActivity, R.string.error_password_blank, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mainActivity, R.string.error_password_blank, Toast.LENGTH_SHORT)
+                                    .show();
                         } else {
                             new AddAccountTask(username, password, addAccountDialog).execute();
                         }
@@ -359,7 +366,8 @@ public class NavigationDrawerFragment extends Fragment {
                                     refreshNavigationDrawerAndPosts();
 
                                     // show login success message
-                                    Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + selectedUsername, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + selectedUsername, Toast.LENGTH_LONG)
+                                            .show();
                                 }
                             }
                         })
@@ -395,7 +403,8 @@ public class NavigationDrawerFragment extends Fragment {
                                 refreshNavigationDrawerAndPosts();
 
                                 // show logout success message
-                                Toast.makeText(mainActivity, R.string.success_logout, Toast.LENGTH_LONG).show();
+                                Toast.makeText(mainActivity, R.string.success_logout, Toast.LENGTH_LONG)
+                                        .show();
                             }
                         })
                         .setNegativeButton(R.string.logout_confirmation_dialog_negative, new DialogInterface.OnClickListener() {
@@ -460,11 +469,21 @@ public class NavigationDrawerFragment extends Fragment {
                     if (success) {
                         // save current user's session cookie and username in user preferences
                         String fileName = Helpers.getUserPreferencesFileName(username);
-                        Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_USERNAME_KEY, username);
-                        Helpers.writeToPreferences(mainActivity, fileName, Globals.USER_PREFS_SESSION_COOKIE_KEY, Globals.SESSION_COOKIE);
+                        Helpers.writeToPreferences(
+                                mainActivity, fileName,
+                                Globals.USER_PREFS_USERNAME_KEY,
+                                username);
+                        Helpers.writeToPreferences(mainActivity,
+                                fileName,
+                                Globals.USER_PREFS_SESSION_COOKIE_KEY,
+                                Globals.SESSION_COOKIE);
 
                         // update last username in global preferences
-                        Helpers.writeToPreferences(mainActivity, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY, username);
+                        Helpers.writeToPreferences(
+                                mainActivity,
+                                Globals.GLOBAL_PREFS,
+                                Globals.GLOBAL_PREFS_LAST_USERNAME_KEY,
+                                username);
 
                         // add user account to list of existing accounts
                         Helpers.addAccountToExistingAccounts(mainActivity, username);
@@ -472,10 +491,12 @@ public class NavigationDrawerFragment extends Fragment {
                         refreshNavigationDrawerAndPosts();
 
                         // show login success message
-                        Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + username, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivity, res.getString(R.string.success_login_base) + " " + username, Toast.LENGTH_LONG)
+                                .show();
                     } else {
                         addAccountDialog.show();
-                        Toast.makeText(mainActivity, R.string.error_username_or_password_incorrect, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivity, R.string.error_username_or_password_incorrect, Toast.LENGTH_LONG)
+                                .show();
                     }
                 }
             }
