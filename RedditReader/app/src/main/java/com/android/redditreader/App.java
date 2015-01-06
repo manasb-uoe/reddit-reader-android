@@ -19,8 +19,13 @@ public class App extends Application {
         super.onCreate();
 
         // update global SESSION_COOKIE with last authenticated user's session cookie
-        String lastUsername = Helpers.readFromPreferences(this, Globals.GLOBAL_PREFS, Globals.GLOBAL_PREFS_LAST_USERNAME_KEY);
-        Globals.SESSION_COOKIE = Helpers.readFromPreferences(this, Helpers.getUserPreferencesFileName(lastUsername), Globals.USER_PREFS_SESSION_COOKIE_KEY);
+        String lastUsername = Helpers.readFromPreferences(this,
+                Globals.GLOBAL_PREFS,
+                Globals.GLOBAL_PREFS_LAST_USERNAME_KEY);
+        Globals.SESSION_COOKIE = Helpers.readFromPreferences(
+                this,
+                Helpers.getUserPreferencesFileName(lastUsername),
+                Globals.USER_PREFS_SESSION_COOKIE_KEY);
 
         // update selected subreddit info with last authenticated user's last visited subreddit
         Helpers.setSubredditInfoForCurrentUser(this);
