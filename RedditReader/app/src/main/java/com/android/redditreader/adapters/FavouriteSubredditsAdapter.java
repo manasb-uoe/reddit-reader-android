@@ -22,7 +22,7 @@ public class FavouriteSubredditsAdapter extends RecyclerView.Adapter<FavouriteSu
     private static final String TAG = FavouriteSubredditsAdapter.class.getSimpleName();
 
     private Context context;
-    private ArrayList<Subreddit> subreddits;
+    public ArrayList<Subreddit> subreddits;
 
     private int accentColor;
     private int textPrimaryColor;

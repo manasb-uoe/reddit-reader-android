@@ -26,8 +26,10 @@ public class FavouriteSubredditsActivity extends ActionBarActivity {
     private RecyclerView subredditsRecyclerView;
     private FavouriteSubredditsAdapter favouriteSubredditsAdapter;
     private ProgressBar subredditsProgressBar;
+    private ArrayList<Subreddit> subreddits;
 
     public static final String FAVOURITE_SUBREDDITS_RESULT_KEY = "favourite_subreddits";
+    private static final String RETAINED_SUBREDDITS_KEY = "retained_subreddits";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +38,21 @@ public class FavouriteSubredditsActivity extends ActionBarActivity {
 
         findViews();
 
-        setUpSubreddits();
+        if (savedInstanceState == null) {
+            subreddits = new ArrayList<>();
+            setUpSubreddits();
+            refreshSubreddits();
+        }
+        else {
+            subreddits = savedInstanceState.getParcelableArrayList(RETAINED_SUBREDDITS_KEY);
+            setUpSubreddits();
+        }
+    }
 
-        refreshSubreddits();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(RETAINED_SUBREDDITS_KEY, favouriteSubredditsAdapter.subreddits);
     }
 
     private void findViews() {
@@ -47,7 +61,7 @@ public class FavouriteSubredditsActivity extends ActionBarActivity {
     }
 
     private void setUpSubreddits() {
-        favouriteSubredditsAdapter = new FavouriteSubredditsAdapter(this, new ArrayList<Subreddit>());
+        favouriteSubredditsAdapter = new FavouriteSubredditsAdapter(this, subreddits);
         subredditsRecyclerView.setAdapter(favouriteSubredditsAdapter);
         subredditsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
