@@ -21,6 +21,7 @@ public class Globals {
     public static final String USER_PREFS_LAST_SUBREDDIT = "last_subreddit";
     public static final String USER_PREFS_LAST_SORT = "last_sort";
     public static final String USER_PREFS_LAST_TIME = "last_time";
+    public static final String USER_PREFS_FAVOURITE_SUBREDDITS = "favourite_subreddits";
 
     public static final String DEFAULT_SUBREDDIT = "Front Page";
     public static final String DEFAULT_SORT = "Hot";

@@ -324,4 +324,41 @@ public class Helpers {
         }
     }
 
+    public static void setFavouriteSubredditsForCurrentUser(Context context, ArrayList<Subreddit> favouriteSubreddits) {
+        JSONArray favouriteSubredditsJsonArray = new JSONArray();
+        for (Subreddit subreddit: favouriteSubreddits) {
+            favouriteSubredditsJsonArray.put(subreddit.getName());
+        }
+
+        writeToPreferences(
+                context,
+                getUserPreferencesFileName(getCurrentUsername(context)),
+                Globals.USER_PREFS_FAVOURITE_SUBREDDITS,
+                favouriteSubredditsJsonArray.toString());
+    }
+
+    public static String[] getFavouriteSubredditsForCurrentUser(Context context) {
+        String[] favouriteSubredditsArray = null;
+
+        String favouriteSubredditsJson = readFromPreferences(
+                context,
+                getUserPreferencesFileName(getCurrentUsername(context)),
+                Globals.USER_PREFS_FAVOURITE_SUBREDDITS);
+
+        if (favouriteSubredditsJson != null) {
+            try {
+                JSONArray favouriteSubredditsJsonArray = new JSONArray(favouriteSubredditsJson);
+                favouriteSubredditsArray = new String[favouriteSubredditsJsonArray.length()];
+
+                for (int i=0; i<favouriteSubredditsArray.length; i++) {
+                    favouriteSubredditsArray[i] = favouriteSubredditsJsonArray.getString(i);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return favouriteSubredditsArray;
+    }
+
 }
