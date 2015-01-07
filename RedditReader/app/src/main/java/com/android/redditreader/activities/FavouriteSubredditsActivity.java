@@ -22,15 +22,17 @@ import java.util.ArrayList;
 public class FavouriteSubredditsActivity extends ActionBarActivity {
 
     private static final String TAG = FavouriteSubredditsActivity.class.getSimpleName();
+
     private RecyclerView subredditsRecyclerView;
     private FavouriteSubredditsAdapter favouriteSubredditsAdapter;
     private ProgressBar subredditsProgressBar;
+
     public static final String FAVOURITE_SUBREDDITS_RESULT_KEY = "favourite_subreddits";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_subreddits);
+        setContentView(R.layout.activity_favourite_subreddits);
 
         findViews();
 
