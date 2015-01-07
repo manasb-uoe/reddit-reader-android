@@ -160,6 +160,19 @@ public class RedditApiWrapper {
                 content = Helpers.readStringFromConnection(Helpers.getConnection(getUserSubredditsURL(), "GET", true));
                 subreddits = parseSubreddits(content, subreddits);
             }
+
+            // set favourite subreddits using the array of favourite subreddit names for current user
+            String[] favouriteSubredditNames = Helpers.getFavouriteSubredditsForCurrentUser(context);
+            if (favouriteSubredditNames != null) {
+                for (String favouriteSubredditName : favouriteSubredditNames) {
+                    for (Subreddit subreddit : subreddits) {
+                        if (subreddit.getName().equals(favouriteSubredditName)) {
+                            subreddit.setFavourite(true);
+                            break;
+                        }
+                    }
+                }
+            }
         }
         else {
             subreddits = Helpers.getDefaultSubredditsFromAsset(context);
@@ -167,8 +180,9 @@ public class RedditApiWrapper {
 
         // add front page as the first subreddit
         Subreddit frontPage = new Subreddit();
-        frontPage.setName("Front Page");
+        frontPage.setName(Globals.DEFAULT_SUBREDDIT);
         subreddits.add(0, frontPage);
+        frontPage.setFavourite(true);
 
         Log.e(TAG, subreddits.size()+"");
         return subreddits;
