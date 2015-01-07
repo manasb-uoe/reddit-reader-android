@@ -180,12 +180,7 @@ public class RedditApiWrapper {
             JSONObject data = (JSONObject) main.get("data");
             JSONArray children = (JSONArray) data.get("children");
 
-            if (data.isNull("after")) {
-                Globals.CURRENT_SUBREDDITS_AFTER = null;
-            }
-            else {
-                Globals.CURRENT_SUBREDDITS_AFTER = data.getString("after");
-            }
+            Globals.CURRENT_SUBREDDITS_AFTER = !data.isNull("after") ? data.getString("after") : null;
 
             for (int i=0;i<children.length();i++) {
                 JSONObject subreddit_num = (JSONObject) children.get(i);
@@ -193,7 +188,7 @@ public class RedditApiWrapper {
 
                 Subreddit subreddit = new Subreddit();
                 subreddit.setName(data2.getString("display_name"));
-                subreddit.setNumOfSubscribers(data2.getLong("subscribers"));
+                subreddit.setNumOfSubscribers(data2.getString("subscribers"));
                 subreddit.setDescription(data2.getString("description_html"));
                 subreddit.setSubscribed(data2.getBoolean("user_is_subscriber"));
                 subreddits.add(subreddit);

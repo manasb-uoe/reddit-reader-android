@@ -1,12 +1,14 @@
 package com.android.redditreader.models;
 
+import java.text.NumberFormat;
+
 /**
  * Created by Manas on 02-01-2015.
  */
 public class Subreddit {
 
     private String name;
-    private Long numOfSubscribers;
+    private String numOfSubscribers;
     private boolean isSubscribed;
     private String description;
 
@@ -22,12 +24,12 @@ public class Subreddit {
         this.name = name;
     }
 
-    public Long getNumOfSubscribers() {
+    public String getNumOfSubscribers() {
         return numOfSubscribers;
     }
 
-    public void setNumOfSubscribers(Long numOfSubscribers) {
-        this.numOfSubscribers = numOfSubscribers;
+    public void setNumOfSubscribers(String numOfSubscribers) {
+        this.numOfSubscribers = NumberFormat.getInstance().format(Long.valueOf(numOfSubscribers));
     }
 
     public boolean isSubscribed() {
