@@ -12,5 +12,7 @@
     <dimen name="navigation_drawer_list_item_height">52dp</dimen>
     <dimen name="navigation_drawer_list_item_text_margin_left">26dp</dimen>
     <dimen name="dialog_padding">25dp</dimen>
+    <dimen name="row_favourite_subreddits_padding_left_right">16dp</dimen>
+    <dimen name="row_favourite_subreddits_hight">52dp</dimen>
 
 </resources>

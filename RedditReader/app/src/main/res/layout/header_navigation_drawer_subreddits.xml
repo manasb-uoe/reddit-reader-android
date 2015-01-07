@@ -60,16 +60,35 @@
         android:layout_height="1dp"
         android:background="@color/divider_light"/>
 
-    <TextView
-        android:id="@+id/subreddits_recycler_view_subheader_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/navigation_drawer_list_item_height"
-        android:textSize="14sp"
-        android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
-        android:paddingRight="@dimen/navigation_drawer_padding_left_right"
-        android:text="@string/navigation_drawer_subheader_subreddits_anonymous"
-        android:gravity="center"
-        android:textColor="@color/text_secondary"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_drawer_list_item_height">
+
+        <TextView
+            android:id="@+id/subreddits_recycler_view_subheader_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+            android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+            android:text="@string/navigation_drawer_subheader_subreddits_anonymous"
+            android:gravity="center"
+            android:textColor="@color/text_secondary"/>
+
+        <TextView
+            android:id="@+id/manage_subreddits_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/navigation_drawer_padding_left_right"
+            android:paddingRight="@dimen/navigation_drawer_padding_left_right"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
+            android:text="@string/navigation_drawer_edit_subreddits"
+            android:layout_alignParentRight="true"
+            android:textSize="12sp"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
 
 
 </LinearLayout>

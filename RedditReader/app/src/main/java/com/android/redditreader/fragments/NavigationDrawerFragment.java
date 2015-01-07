@@ -1,9 +1,11 @@
 package com.android.redditreader.fragments;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.redditreader.R;
+import com.android.redditreader.activities.FavouriteSubredditsActivity;
 import com.android.redditreader.activities.MainActivity;
 import com.android.redditreader.background_tasks.GetSubredditsTask;
 import com.android.redditreader.models.Subreddit;
@@ -37,11 +40,15 @@ import java.util.ArrayList;
 
 public class NavigationDrawerFragment extends Fragment {
 
+    private static final String TAG = NavigationDrawerFragment.class.getSimpleName();
+
     private MainActivity mainActivity;
     private RecyclerView subredditsRecyclerView;
     private ProgressBar subredditsProgressBar;
     private NavigationDrawerSubredditsAdapter navigationDrawerSubredditsAdapter;
     private Resources res;
+
+    public static final int PICK_FAVOURITE_SUBREDDITS_REQUEST = 0;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -64,10 +71,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         res = mainActivity.getResources();
 
-        // set up subreddits recycler view
-        navigationDrawerSubredditsAdapter = new NavigationDrawerSubredditsAdapter(new ArrayList<Subreddit>());
-        subredditsRecyclerView.setAdapter(navigationDrawerSubredditsAdapter);
-        subredditsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        setUpSubreddits();
 
         refreshSubreddits();
     }
@@ -75,6 +79,12 @@ public class NavigationDrawerFragment extends Fragment {
     private void findViews(View view) {
         subredditsRecyclerView = (RecyclerView) view.findViewById(R.id.subreddits_recycler_view);
         subredditsProgressBar = (ProgressBar) view.findViewById(R.id.subreddits_progressbar);
+    }
+
+    private void setUpSubreddits() {
+        navigationDrawerSubredditsAdapter = new NavigationDrawerSubredditsAdapter(new ArrayList<Subreddit>());
+        subredditsRecyclerView.setAdapter(navigationDrawerSubredditsAdapter);
+        subredditsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void refreshSubreddits() {
@@ -90,11 +100,8 @@ public class NavigationDrawerFragment extends Fragment {
                 new GetSubredditsTask.PostExecuteCallback() {
                     @Override
                     public void onPostExecute(ArrayList<Subreddit> subreddits) {
-                        navigationDrawerSubredditsAdapter.subreddits.clear();
-                        navigationDrawerSubredditsAdapter.subreddits.addAll(subreddits);
-                        navigationDrawerSubredditsAdapter.subreddits.trimToSize();
+                        navigationDrawerSubredditsAdapter.updateDataSetAndNotifyChanges(subreddits);
                         navigationDrawerSubredditsAdapter.resetSelectionIndex();
-                        navigationDrawerSubredditsAdapter.notifyDataSetChanged();
 
                         subredditsProgressBar.setVisibility(View.INVISIBLE);
                         subredditsRecyclerView.setVisibility(View.VISIBLE);
@@ -112,7 +119,7 @@ public class NavigationDrawerFragment extends Fragment {
         private final int TYPE_HEADAER = 0;
         private final int TYPE_ITEM = 1;
 
-        public ArrayList<Subreddit> subreddits;
+        private ArrayList<Subreddit> subreddits;
 
         private int currentPos = 1;
         private int oldPos = 1;
@@ -174,15 +181,45 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         /**
-         * Updates index of selected item based on the current subreddit
+         * Updates index of selected item based on the current subreddit. If no matching
+         * subreddit found, default index: -1 is set.
          */
         public void resetSelectionIndex() {
+            boolean found = false;
+
             for (int i = 0; i < subreddits.size(); i++) {
                 if (subreddits.get(i).getName().equals(Globals.CURRENT_SUBREDDIT)) {
                     currentPos = i + 1;
                     oldPos = currentPos;
+                    found = true;
+                    break;
                 }
             }
+
+            if (!found) {
+                currentPos = -1;
+                oldPos = -1;
+            }
+        }
+
+        public void updateDataSetAndNotifyChanges(ArrayList<Subreddit> subreddits) {
+            this.subreddits.clear();
+
+            // only add favourite subreddits to drawer if user is currently logged in
+            // else, add all provided subreddits
+            if (Globals.SESSION_COOKIE != null) {
+                for (Subreddit subreddit : subreddits) {
+                    if (subreddit.isFavourite()) {
+                        this.subreddits.add(subreddit);
+                    }
+                }
+            }
+            else {
+                this.subreddits.addAll(subreddits);
+            }
+
+            this.subreddits.trimToSize();
+            notifyDataSetChanged();
         }
 
         private class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -191,15 +228,19 @@ public class NavigationDrawerFragment extends Fragment {
             private TextView usernameTextView;
             private LinearLayout mainOptionsList;
             private TextView subredditsRecyclerViewHeadingTextView;
+            private TextView manageSubredditsTextView;
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
+
                 accountInfoContainer = itemView.findViewById(R.id.account_info_container);
                 usernameTextView = (TextView) accountInfoContainer.findViewById(R.id.username_textview);
                 mainOptionsList = (LinearLayout) itemView.findViewById(R.id.main_options_list);
                 subredditsRecyclerViewHeadingTextView = (TextView) itemView.findViewById(R.id.subreddits_recycler_view_subheader_textview);
+                manageSubredditsTextView = (TextView) itemView.findViewById(R.id.manage_subreddits_textview);
 
                 accountInfoContainer.setOnClickListener(this);
+                manageSubredditsTextView.setOnClickListener(this);
 
                 refreshNavigationDrawerHeader();
 
@@ -217,6 +258,16 @@ public class NavigationDrawerFragment extends Fragment {
                             showAddAccountDialog();
                         }
                         break;
+                    case R.id.manage_subreddits_textview:
+                        if (Globals.SESSION_COOKIE != null) {
+                            Intent goToFavouritesSubredditsActivity = new Intent(mainActivity, FavouriteSubredditsActivity.class);
+                            startActivityForResult(goToFavouritesSubredditsActivity, PICK_FAVOURITE_SUBREDDITS_REQUEST);
+                        }
+                        else {
+                            Toast.makeText(mainActivity, R.string.error_login_required, Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        break;
                     case R.id.main_option_container:
                         if (Globals.SESSION_COOKIE != null) {
                             switch (mainOptionsList.indexOfChild(v)) {
@@ -227,7 +278,7 @@ public class NavigationDrawerFragment extends Fragment {
                                     // User
                                     break;
                                 case 2:
-                                    // Subreddut
+                                    // Subreddit
                                     break;
                                 case 3:
                                     // Settings
@@ -243,7 +294,7 @@ public class NavigationDrawerFragment extends Fragment {
                                     // User
                                     break;
                                 case 1:
-                                    // Subreddut
+                                    // Subreddit
                                     break;
                                 case 2:
                                     // Settings
@@ -559,6 +610,24 @@ public class NavigationDrawerFragment extends Fragment {
                 mainActivity.postsListFragment.refreshPosts();
                 mainActivity.updateActionBarText();
             }
+        }
+    }
+
+    /**
+     * Handles the list of favourite subreddits returned by SubredditsActivity
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_FAVOURITE_SUBREDDITS_REQUEST && resultCode == Activity.RESULT_OK) {
+            ArrayList<Subreddit> favouriteSubreddits = data.getParcelableArrayListExtra(FavouriteSubredditsActivity.FAVOURITE_SUBREDDITS_RESULT_KEY);
+
+            navigationDrawerSubredditsAdapter.updateDataSetAndNotifyChanges(favouriteSubreddits);
+            navigationDrawerSubredditsAdapter.resetSelectionIndex();
+
+            // save favourite subreddits in current user preferences
+            Helpers.setFavouriteSubredditsForCurrentUser(mainActivity, favouriteSubreddits);
         }
     }
 }
