@@ -90,14 +90,13 @@ public class NavigationDrawerFragment extends Fragment {
     private void refreshSubreddits() {
         new GetSubredditsTask(
                 mainActivity,
-                new GetSubredditsTask.PreExecuteCallback() {
+                new GetSubredditsTask.TaskCallbacks() {
                     @Override
                     public void onPreExecute() {
                         subredditsProgressBar.setVisibility(View.VISIBLE);
                         subredditsRecyclerView.setVisibility(View.INVISIBLE);
                     }
-                },
-                new GetSubredditsTask.PostExecuteCallback() {
+
                     @Override
                     public void onPostExecute(ArrayList<Subreddit> subreddits) {
                         navigationDrawerSubredditsAdapter.updateDataSetAndNotifyChanges(subreddits);

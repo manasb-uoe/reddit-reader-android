@@ -69,14 +69,13 @@ public class FavouriteSubredditsActivity extends ActionBarActivity {
     private void refreshSubreddits() {
         new GetSubredditsTask(
                 this,
-                new GetSubredditsTask.PreExecuteCallback() {
+                new GetSubredditsTask.TaskCallbacks() {
                     @Override
                     public void onPreExecute() {
                         subredditsProgressBar.setVisibility(View.VISIBLE);
                         subredditsRecyclerView.setVisibility(View.INVISIBLE);
                     }
-                },
-                new GetSubredditsTask.PostExecuteCallback() {
+
                     @Override
                     public void onPostExecute(ArrayList<Subreddit> subreddits) {
                         favouriteSubredditsAdapter.updateDataSetAndNotifyChanges(subreddits);

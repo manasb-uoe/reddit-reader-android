@@ -11,21 +11,19 @@ import java.util.ArrayList;
 public class GetSubredditsTask extends AsyncTask<Void, Void, ArrayList<Subreddit>> {
 
     private Context context;
-    private PreExecuteCallback preExecuteCallback;
-    private PostExecuteCallback postExecuteCallback;
+    private TaskCallbacks taskCallbacks;
 
-    public GetSubredditsTask(Context context, PreExecuteCallback preExecuteCallback, PostExecuteCallback postExecuteCallback) {
+    public GetSubredditsTask(Context context, TaskCallbacks taskCallbacks) {
         this.context = context;
-        this.preExecuteCallback = preExecuteCallback;
-        this.postExecuteCallback = postExecuteCallback;
+        this.taskCallbacks = taskCallbacks;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
 
-        if (preExecuteCallback != null) {
-            preExecuteCallback.onPreExecute();
+        if (taskCallbacks != null) {
+            taskCallbacks.onPreExecute();
         }
     }
 
@@ -38,16 +36,14 @@ public class GetSubredditsTask extends AsyncTask<Void, Void, ArrayList<Subreddit
     protected void onPostExecute(ArrayList<Subreddit> subreddits) {
         super.onPostExecute(subreddits);
 
-        if (postExecuteCallback != null) {
-            postExecuteCallback.onPostExecute(subreddits);
+        if (taskCallbacks != null) {
+            taskCallbacks.onPostExecute(subreddits);
         }
     }
 
-    public static interface PostExecuteCallback {
-        public void onPostExecute(ArrayList<Subreddit> subreddits);
-    }
-
-    public static interface PreExecuteCallback {
+    public static interface TaskCallbacks {
         public void onPreExecute();
+
+        public void onPostExecute(ArrayList<Subreddit> subreddits);
     }
 }
