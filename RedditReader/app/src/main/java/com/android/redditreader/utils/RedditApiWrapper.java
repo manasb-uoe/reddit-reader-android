@@ -201,6 +201,7 @@ public class RedditApiWrapper {
                 JSONObject data2 = (JSONObject) subreddit_num.get("data");
 
                 Subreddit subreddit = new Subreddit();
+                subreddit.setFullName(data2.getString("name"));
                 subreddit.setName(data2.getString("display_name"));
                 subreddit.setNumOfSubscribers(data2.getString("subscribers"));
                 subreddit.setDescription(data2.getString("description_html"));
@@ -225,6 +226,40 @@ public class RedditApiWrapper {
             conn = Helpers.getConnection(voteURL, "POST", true);
 
             String postData = "dir=" + voteDirection + "&id=" + id + "&uh=" + Globals.MODHASH;
+            Helpers.writeToConnection(conn, postData);
+
+            if (conn.getResponseCode() == 200) {
+                return true;
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        return false;
+    }
+
+    // TODO only subscribe to subreddits that the current user has access to
+    public static boolean subscribe(String sr, boolean shouldSub) {
+        HttpURLConnection conn = null;
+
+        try {
+            URL subscribeURL = new URL(Globals.API_SUBSCRIBE_URL);
+
+            conn = Helpers.getConnection(subscribeURL, "POST", true);
+
+            String postData;
+            if (shouldSub) {
+                postData = "action=sub&sr=" + sr + "&uh=" + Globals.MODHASH;
+            }
+            else {
+                postData = "action=unsub&sr=" + sr + "&uh=" + Globals.MODHASH;
+            }
             Helpers.writeToConnection(conn, postData);
 
             if (conn.getResponseCode() == 200) {

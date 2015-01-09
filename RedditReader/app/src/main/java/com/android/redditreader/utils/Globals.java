@@ -11,6 +11,7 @@ public class Globals {
     public static final String API_BASE_URL = "http://www.reddit.com";
     public static final String API_LOGIN_URL = API_BASE_URL + "/api/login";
     public static final String API_VOTE_URL = API_BASE_URL + "/api/vote";
+    public static final String API_SUBSCRIBE_URL = API_BASE_URL + "/api/subscribe";
 
     // shared preferences file and key names
     public static final String GLOBAL_PREFS = "global_prefs";
