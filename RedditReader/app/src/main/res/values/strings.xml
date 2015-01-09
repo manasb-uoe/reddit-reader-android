@@ -50,6 +50,12 @@
     <string name="title_activity_subreddits">Favourite Subreddits</string>
     <string name="navigation_drawer_edit_subreddits">EDIT</string>
     <string name="error_login_required">You need to log in to perform this action</string>
-    <string name="error_cannot_remove_front_page_from_favourites">Front Page cannot be removed from favourites</string>
+    <string name="error_cannot_remove_front_page_from_favourites">Front Page cannot be removed from Favourites</string>
+    <string name="success_added_to_favourites_base">has been added to Favourites</string>
+    <string name="success_removed_from_favourites_base">has been removed from Favourites</string>
+    <string name="please_wait_progress_dialog_message">Please wait…</string>
+    <string name="subreddit_unsubscribe_base">Unsubscribed from</string>
+    <string name="subreddit_subscribe_base">Subscribed to</string>
+    <string name="error_failed_to_perform_requested_operation">Failed to perform the requested operation</string>
 
 </resources>

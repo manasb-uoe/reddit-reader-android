@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="post_options_dialog_list_items">
        <item>View subreddit</item>
         <item>View OP\'s profile</item>
@@ -39,4 +40,10 @@
         <item>@drawable/ic_action_settings</item>
         <item>@drawable/ic_action_logout</item>
     </string-array>
+
+    <string-array name="subreddit_options_dialog">
+        <item>Unsubscribe</item>
+        <item>View Description</item>
+    </string-array>
+
 </resources>

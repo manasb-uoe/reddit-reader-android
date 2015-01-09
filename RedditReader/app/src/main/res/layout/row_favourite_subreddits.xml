@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/row_favourite_subreddits_padding_left_right"
     android:paddingRight="@dimen/row_favourite_subreddits_padding_left_right"
     android:clickable="true"
+    android:longClickable="true"
     android:orientation="vertical"
     android:gravity="center_vertical"
     android:background="?android:selectableItemBackground" >
@@ -24,6 +25,7 @@
             android:id="@+id/subreddit_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="helloWorld"
             android:textSize="15sp"
             android:textColor="@color/text_primary" />
 
@@ -32,16 +34,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
+            android:text="17,150 subscribers"
             android:textColor="@color/text_secondary"/>
 
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/favourite_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:background="@android:color/transparent"
-        android:layout_alignParentRight="true" />
+        <CheckBox
+            android:id="@+id/favourite_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"/>
 
 </RelativeLayout>
