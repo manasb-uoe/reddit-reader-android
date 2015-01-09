@@ -10,6 +10,7 @@ import java.text.NumberFormat;
  */
 public class Subreddit implements Parcelable {
 
+    private String fullName;
     private String name;
     private String numOfSubscribers;
     private boolean isSubscribed;
@@ -27,6 +28,14 @@ public class Subreddit implements Parcelable {
         this.isSubscribed = source.readInt() == 1;
         this.description = source.readString();
         this.isFavourite = source.readInt() == 1;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getName() {
